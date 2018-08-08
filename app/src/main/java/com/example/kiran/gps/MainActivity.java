@@ -14,10 +14,12 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -38,13 +40,13 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    SwipeRefreshLayout pullToRefresh;
     LocationManager locationManager;
     TextView place, humid, air;
     TextView date;
     protected static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     TextView temp;
-
+Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -52,13 +54,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+         pullToRefresh = findViewById(R.id.pullToRefresh);
+pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    @Override
+    public void onRefresh() {
+        find_weather();
+        pullToRefresh.setRefreshing(false);
+    }
+});
         date = findViewById(R.id.day);
         temp = findViewById(R.id.celcius);
         place = findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
         air = findViewById(R.id.wind);
-        requestReadLocationPermission();
         showLocationSettingsDialog();
+
+        requestReadLocationPermission();
+
         find_weather();
 
 
@@ -66,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void find_weather() {
+        double latti = 0.0,longi = 0.0;
 
-        double latti = 0, longi = 0;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -141,19 +154,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             privacyGuardWorkaround();
         }
-        togglegps();
+
 
     }
 
-    private void togglegps() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showLocationSettingsDialog();
-        } else {
-            return;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -172,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
             DummyLocationListener dummyLocationListener = new DummyLocationListener();
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, dummyLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, dummyLocationListener);
             locationManager.removeUpdates(dummyLocationListener);
         } catch (SecurityException e) {
             // This will most probably not happen, as we just got granted the permission
@@ -180,23 +185,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLocationSettingsDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("Location Settings");
-        alertDialog.setMessage("Enable GPS press cancel if already set");
-        alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        });
-        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return;
+        }else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Location Settings");
+            alertDialog.setMessage("Enable GPS press cancel if already set");
+            alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertDialog.show();
+        }
     }
+
+
 
     public class DummyLocationListener implements LocationListener {
 
