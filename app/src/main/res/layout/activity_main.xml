@@ -1,4 +1,7 @@
-
+<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/pullToRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -125,3 +128,4 @@ android:background="@drawable/background"
 
     </RelativeLayout>
 </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
