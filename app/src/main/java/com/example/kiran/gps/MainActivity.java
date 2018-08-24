@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -36,8 +35,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout pullToRefresh;
-    private LocationManager locationManager;
-    private TextView place, humid, air, date, temp;
+    private TextView place, humid, air, date,temp;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -45,34 +43,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         pullToRefresh = findViewById(R.id.pullToRefresh);
+        screenRefresher();
+        setUIElements();
+        showLocationSettingsDialog();
+        requestReadLocationPermission();
+        setCurrentDate();
+        findWeather();
+    }
+
+    private void screenRefresher() {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                find_weather();
+                findWeather();
                 pullToRefresh.setRefreshing(false);
             }
         });
+    }
+
+    private void setUIElements() {
         date = findViewById(R.id.day);
-        temp = findViewById(R.id.celcius);
         place = findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
         air = findViewById(R.id.wind);
-        showLocationSettingsDialog();
-        requestReadLocationPermission();
-        get_date();
-        find_weather();
+        temp = findViewById(R.id.celcius);
     }
 
-    private void get_date() {
+    private void setCurrentDate() {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
         String formattedDate = df.format(c);
         date.setText(formattedDate);
     }
 
-    private void find_weather() {
+    private void findWeather() {
+        LocationManager locationManager;
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         double latitude = 0.0, longitude = 0.0;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -124,23 +131,8 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MainActivity.MY_PERMISSIONS_ACCESS_FINE_LOCATION);
-            privacyGuardWorkaround();
-        }
+            }
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void privacyGuardWorkaround() {
-        // Workaround for CM privacy guard. Register for location updates in order for it to ask us for permission
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        try {
-            DummyLocationListener dummyLocationListener = new DummyLocationListener();
-            Objects.requireNonNull(locationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, dummyLocationListener);
-            locationManager.removeUpdates(dummyLocationListener);
-        } catch (SecurityException e) {
-          e.printStackTrace();
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showLocationSettingsDialog() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -162,30 +154,6 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.show();
         }
     }
-
-    class DummyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    }
-
 }
 
 
