@@ -28,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
     protected TextView place, humid, air, date,temp;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pullToRefresh = findViewById(R.id.pullToRefresh);
         screenRefresher();
         setUIElements();
         showLocationSettingsDialog();
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUIElements() {
+        pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
         place = findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.MY_PERMISSIONS_ACCESS_FINE_LOCATION);
             }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showLocationSettingsDialog() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
