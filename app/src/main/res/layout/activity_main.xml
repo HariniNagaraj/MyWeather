@@ -1,8 +1,15 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pullToRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
 
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
+
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -14,8 +21,6 @@ android:background="@drawable/background"
         android:id="@+id/celcius"
         android:layout_width="wrap_content"
         android:layout_height="195dp"
-
-
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="131dp"
@@ -24,7 +29,9 @@ android:background="@drawable/background"
         android:hint="Celsius"
         android:text=""
         android:textColor="@android:color/white"
-        android:textSize="170sp" />
+        android:textSize="170sp"
+        android:layout_alignParentLeft="true"
+        tools:targetApi="jelly_bean" />
 
     <TextView
         android:id="@+id/city"
@@ -33,7 +40,6 @@ android:background="@drawable/background"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-
         android:gravity="center"
         android:hint="place"
         android:text=""
@@ -48,7 +54,10 @@ android:background="@drawable/background"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="66dp"
         android:layout_marginTop="166dp"
-        app:srcCompat="@drawable/degree_icon" />
+        app:srcCompat="@drawable/degree_icon"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="66dp"
+        android:contentDescription="TODO" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +65,8 @@ android:background="@drawable/background"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="53dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -64,14 +74,13 @@ android:background="@drawable/background"
             android:layout_height="39dp"
             android:layout_alignTop="@+id/humidity"
             android:layout_marginLeft="25dp"
-
-            app:srcCompat="@drawable/wind_speed_icon" />
+            app:srcCompat="@drawable/wind_speed_icon"
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/wind"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-
             android:layout_alignTop="@+id/humidity"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="7dp"
@@ -85,18 +94,21 @@ android:background="@drawable/background"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="23dp"
             android:layout_height="25dp"
-
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="62dp"
             android:layout_marginEnd="69dp"
-            app:srcCompat="@drawable/precipitation_icon" />
+            app:srcCompat="@drawable/precipitation_icon"
+            android:layout_marginRight="69dp"
+            android:layout_alignParentRight="true"
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/humidity"
@@ -105,9 +117,11 @@ android:background="@drawable/background"
             android:layout_alignTop="@+id/imageView3"
             android:layout_marginStart="-69dp"
             android:layout_toEndOf="@+id/imageView3"
-            android:hint="humi"
+            android:hint="humidity"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginLeft="-69dp"
+            android:layout_toRightOf="@+id/imageView3" />
 
         <TextView
             android:id="@+id/day"
@@ -120,8 +134,10 @@ android:background="@drawable/background"
             android:hint="date"
             android:text=""
             android:textColor="@android:color/white"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            tools:targetApi="jelly_bean" />
 
 
     </RelativeLayout>
 </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
