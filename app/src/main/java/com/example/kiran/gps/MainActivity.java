@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setUIElements() {
+    protected void setUIElements() {
         pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
         place = findViewById(R.id.city);
@@ -97,22 +97,6 @@ public class MainActivity extends AppCompatActivity {
             });
             alertDialog.show();
         }
-    }
-
-    public TextView getTemp() {
-        return temp;
-    }
-
-    public TextView getPlace() {
-        return place;
-    }
-
-    public TextView getHumid() {
-        return humid;
-    }
-
-    public TextView getAir() {
-        return air;
     }
 }
 

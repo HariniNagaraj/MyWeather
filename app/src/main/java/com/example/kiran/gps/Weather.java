@@ -54,10 +54,10 @@ public class Weather {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    mainActivity.getTemp().setText(temperature);
-                    mainActivity.getPlace().setText(city);
-                    mainActivity.getHumid().setText(humidity);
-                    mainActivity.getAir().setText(wind);
+                    mainActivity.temp.setText(temperature);
+                    mainActivity.place.setText(city);
+                    mainActivity.humid.setText(humidity);
+                    mainActivity.air.setText(wind);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
