@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    private final Weather weather = new Weather(this);
+    private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
     protected TextView place, humid, air, date,temp;
     private Intent intent;
@@ -34,15 +34,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        screenRefresher();
-        setUIElements();
+        bindUIElements();
         showLocationSettingsDialog();
         requestReadLocationPermission();
         setCurrentDate();
         weather.findWeather();
+        initScreenRefresh();
     }
 
-    private void screenRefresher() {
+    private void initScreenRefresh() {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected void setUIElements() {
+    protected void bindUIElements() {
         pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
         place = findViewById(R.id.city);

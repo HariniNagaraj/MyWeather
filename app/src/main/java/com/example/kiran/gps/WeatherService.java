@@ -19,10 +19,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Weather {
+public class WeatherService {
     private final MainActivity mainActivity;
     private double latitude = 0.0, longitude = 0.0;
-    public Weather(MainActivity mainActivity) {
+    public WeatherService(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
     void findWeather() {
