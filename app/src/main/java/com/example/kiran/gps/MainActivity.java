@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
     protected static TextView place, humid, air, date,temp;
-    protected static double latitude = 0.0, longitude = 0.0;
+    private double latitude, longitude;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
 
@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindUIElements();
-        locationServices();
-        showLocationSettingsDialog();
         requestReadLocationPermission();
-        setCurrentDate();
-        weather.findWeather();
+        showLocationSettingsDialog();
+        showCurrentDate();
+        locationServices();
+        weather.findWeather(latitude,longitude);
         initScreenRefresh();
     }
 
@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                weather.findWeather();
+                locationServices();
+                weather.findWeather(latitude,longitude);
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         temp = findViewById(R.id.celcius);
     }
 
-    private void setCurrentDate() {
+    private void showCurrentDate() {
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
         String formattedDate = df.format(c);
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             });
             alertDialog.show();
         }
+
     }
 }
 

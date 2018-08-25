@@ -2,8 +2,6 @@ package com.example.kiran.gps;
 
 import static com.example.kiran.gps.MainActivity.air;
 import static com.example.kiran.gps.MainActivity.humid;
-import static com.example.kiran.gps.MainActivity.latitude;
-import static com.example.kiran.gps.MainActivity.longitude;
 import static com.example.kiran.gps.MainActivity.place;
 import static com.example.kiran.gps.MainActivity.temp;
 import android.os.Build;
@@ -24,7 +22,7 @@ public class WeatherService {
     public WeatherService(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
-    void findWeather() {
+    void findWeather(double latitude,double longitude) {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
