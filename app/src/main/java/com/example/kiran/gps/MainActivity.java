@@ -82,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showCurrentDate() {
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
-        String formattedDate = df.format(c);
+        Date day = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
+        String formattedDate = simpleDateFormat.format(day);
         date.setText(formattedDate);
     }
 
