@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyCallBack {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
     protected static TextView  humid, place, air, date,temp;
@@ -117,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
             });
             alertDialog.show();
         }
+
+    }
+
+    @Override
+    public void UpdateMyText(String mystr) {
 
     }
 }
