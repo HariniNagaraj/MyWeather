@@ -1,5 +1,11 @@
 package com.example.kiran.gps;
 
+import static com.example.kiran.gps.MainActivity.air;
+import static com.example.kiran.gps.MainActivity.humid;
+import static com.example.kiran.gps.MainActivity.latitude;
+import static com.example.kiran.gps.MainActivity.longitude;
+import static com.example.kiran.gps.MainActivity.place;
+import static com.example.kiran.gps.MainActivity.temp;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.widget.Toast;
@@ -8,8 +14,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import static com.example.kiran.gps.MainActivity.latitude;
-import static com.example.kiran.gps.MainActivity.longitude;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
@@ -21,10 +25,6 @@ public class WeatherService {
         this.mainActivity = mainActivity;
     }
     void findWeather() {
-        fetchJsonData();
-    }
-
-    private void fetchJsonData() {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -37,10 +37,10 @@ public class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    mainActivity.temp.setText(temperature);
-                    mainActivity.place.setText(city);
-                    mainActivity.humid.setText(humidity);
-                    mainActivity.air.setText(wind);
+                    temp.setText(temperature);
+                    place.setText(city);
+                    humid.setText(humidity);
+                    air.setText(wind);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
