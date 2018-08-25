@@ -6,8 +6,6 @@ import static com.example.kiran.gps.MainActivity.place;
 import static com.example.kiran.gps.MainActivity.temp;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Toast;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -19,10 +17,12 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WeatherService  {
+public class WeatherService {
+    private MyCallBack myCallBack;
     private final MainActivity mainActivity;
-    public WeatherService(MainActivity mainActivity) {
+    public WeatherService(MainActivity mainActivity,MyCallBack myCallBack) {
         this.mainActivity = mainActivity;
+        this.myCallBack=myCallBack;
     }
     void findWeather(double latitude,double longitude) {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";

@@ -26,7 +26,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
-    protected static TextView place, humid, air, date,temp;
+    protected static TextView  humid, place, air, date,temp;
     private double latitude, longitude;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
