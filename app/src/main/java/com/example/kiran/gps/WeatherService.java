@@ -20,11 +20,7 @@ import org.json.JSONObject;
 public class WeatherService {
 
     private final MainActivity mainActivity;
-    MyCallBack myCallBack;
-    public WeatherService(MainActivity mainActivity, MyCallBack myCallBack){
-        this.mainActivity = mainActivity;
-        this.myCallBack=myCallBack;
-    }
+    String city;
     public WeatherService(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -38,11 +34,11 @@ public class WeatherService {
                     JSONObject main_object = response.getJSONObject("main");
                     JSONObject main_object2 = response.getJSONObject("wind");
                     String temperature = String.valueOf(main_object.getInt("temp"));
-                    String city = response.getString("name");
+                   city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
                     temp.setText(temperature);
-                    place.setText(city);
+place.setText(city);
                     humid.setText(humidity);
                     air.setText(wind);
                 } catch (JSONException e) {
@@ -64,4 +60,5 @@ public class WeatherService {
         queue.add(jor);
 
     }
+
 }

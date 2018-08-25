@@ -23,10 +23,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MyCallBack {
+public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
-    protected static TextView  humid, place, air, date,temp;
+    protected static TextView  place,humid, air, date,temp;
     private double latitude, longitude;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MyCallBack {
     protected void bindUIElements() {
         pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
-        place = findViewById(R.id.city);
+place=findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
         air = findViewById(R.id.wind);
         temp = findViewById(R.id.celcius);
@@ -120,10 +120,7 @@ public class MainActivity extends AppCompatActivity implements MyCallBack {
 
     }
 
-    @Override
-    public void UpdateMyText(String mystr) {
 
-    }
 }
 
 
