@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
     protected TextView place, humid, air, date,temp;
+    protected static double latitude = 0.0, longitude = 0.0;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
 
@@ -35,11 +37,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindUIElements();
+        locationServices();
         showLocationSettingsDialog();
         requestReadLocationPermission();
         setCurrentDate();
         weather.findWeather();
         initScreenRefresh();
+    }
+
+    private void locationServices() {
+        LocationManager locationManager;
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+        }
     }
 
     private void initScreenRefresh() {
