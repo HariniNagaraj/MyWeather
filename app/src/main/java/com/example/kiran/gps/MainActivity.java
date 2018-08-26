@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private double latitude, longitude;
     private Intent intent;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
+    private static final int[] grantResult = new int[2];
+    private static String[] PERMISSIONS_GPS = {Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION};
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -39,10 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Pull To Refresh");
         bindUIElements();
         requestReadLocationPermission();
-        showLocationSettingsDialog();
+        onRequestPermissionsResult(MY_PERMISSIONS_ACCESS_FINE_LOCATION,PERMISSIONS_GPS,grantResult);
         showCurrentDate();
         locationServices();
-        weather.findWeather(latitude,longitude);
         initScreenRefresh();
     }
 
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initScreenRefresh() {
+        weather.findWeather(latitude,longitude);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     protected void bindUIElements() {
         pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
-place=findViewById(R.id.city);
+        place=findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
         air = findViewById(R.id.wind);
         temp = findViewById(R.id.celcius);
@@ -98,6 +103,25 @@ place=findViewById(R.id.city);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //If user presses allow
+                    Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
+                   showLocationSettingsDialog();
+                } else {
+                    //If user presses deny
+                    Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showLocationSettingsDialog() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!Objects.requireNonNull(manager).isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -117,10 +141,7 @@ place=findViewById(R.id.city);
             });
             alertDialog.show();
         }
-
     }
-
-
 }
 
 
