@@ -95,10 +95,13 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void requestReadLocationPermission() {
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MainActivity.MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+
             }
     }
 
@@ -108,12 +111,13 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 1: {
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //If user presses allow
                     Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
                    showLocationSettingsDialog();
                 } else {
-                    //If user presses deny
+
+
                     Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -127,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         if (!Objects.requireNonNull(manager).isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Location Settings");
-            alertDialog.setMessage("Enable GPS press cancel if already set");
+            alertDialog.setMessage("Permission Granted, Please Enable GPS in Settings.");
             alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
