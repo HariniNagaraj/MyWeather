@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -30,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected static TextView  place,humid, air, date,temp;
     private double latitude, longitude;
     private Intent intent;
-    private static final int requestCode = 1;
-    private static final int[] grantResult = new int[2];
+    private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 1;
     private static String[] PERMISSIONS_GPS = {Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION};
 
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Pull To Refresh");
         bindUIElements();
         requestReadLocationPermission();
-        onRequestPermissionsResult(requestCode,PERMISSIONS_GPS,grantResult);
         showCurrentDate();
         locationServices();
         initScreenRefresh();
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
             }
+
         }
     }
 
@@ -93,25 +93,27 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void requestReadLocationPermission() {
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivity.requestCode);
+                    MainActivity.MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+
             }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
+    public void onRequestPermissionsResult(int MY_PERMISSIONS_ACCESS_FINE_LOCATION, String[] PERMISSIONS_GPS, int[] grantResults) {
+
+        switch (MY_PERMISSIONS_ACCESS_FINE_LOCATION) {
             case 1: {
-                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if ((grantResults.length == 1 && grantResults[0]  == PackageManager.PERMISSION_GRANTED) ){
                     //If user presses allow
                     Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-                   showLocationSettingsDialog();
-                } else {
-                    //If user presses deny
+                   showLocationSettingsDialog();}
+                   else{
                     Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
