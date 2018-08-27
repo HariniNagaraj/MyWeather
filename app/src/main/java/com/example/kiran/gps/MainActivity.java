@@ -61,16 +61,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initScreenRefresh() {
+        isGPSEnabled();
         weather.findWeather(latitude,longitude);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                isGPSEnabled();
                 manageLocationServices();
                 weather.findWeather(latitude,longitude);
                 pullToRefresh.setRefreshing(false);
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    void isGPSEnabled(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED){
+            showLocationSettingsDialog();
+        }
     }
 
     protected void bindUIElements() {
