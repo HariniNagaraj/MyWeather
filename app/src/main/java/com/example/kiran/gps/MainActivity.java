@@ -24,15 +24,22 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
-    private SwipeRefreshLayout pullToRefresh;
-    private TextView place, humid, air, date, temp;
+
+    @BindView(R.id.pullToRefresh) SwipeRefreshLayout pullToRefresh;
+    @BindView(R.id.city) TextView place;
+    @BindView(R.id.day) TextView date;
+    @BindView(R.id.celcius) TextView temp;
+    @BindView(R.id.wind) TextView air;
+    @BindView(R.id.humidity) TextView humid;
+
     private double latitude, longitude;
     private Intent intent;
     private static final int requestCode = 1;
-    private static String[] PERMISSIONS_GPS = {Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION};
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Pull To Refresh");
-        bindUIElements();
+        ButterKnife.bind(this);
         requestReadLocationPermission();
         showCurrentDate();
         manageLocationServices();
@@ -95,15 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
             showLocationSettingsDialog();
         }
-    }
-
-    protected void bindUIElements() {
-        pullToRefresh = findViewById(R.id.pullToRefresh);
-        date = findViewById(R.id.day);
-        place = findViewById(R.id.city);
-        humid = findViewById(R.id.humidity);
-        air = findViewById(R.id.wind);
-        temp = findViewById(R.id.celcius);
     }
 
     private void showCurrentDate() {
