@@ -27,7 +27,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
     private SwipeRefreshLayout pullToRefresh;
-    protected static TextView  place,humid, air, date,temp;
+    private TextView place, humid, air, date, temp;
     private double latitude, longitude;
     private Intent intent;
     private static final int requestCode = 1;
@@ -64,23 +64,35 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initScreenRefresh() {
         isGPSEnabled();
-        weather.findWeather(latitude,longitude);
+        updateWeather();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isGPSEnabled();
                 manageLocationServices();
-                weather.findWeather(latitude,longitude);
+                updateWeather();
                 pullToRefresh.setRefreshing(false);
             }
         });
     }
 
+    private void updateWeather() {
+        weather.findWeather(latitude, longitude, new WeatherService.MyCallBack() {
+            @Override
+            public void updateMyText(String city, String temperature, String wind, String humidity) {
+                place.setText(city);
+                humid.setText(humidity);
+                air.setText(wind);
+                temp.setText(temperature);
+            }
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    void isGPSEnabled(){
+    void isGPSEnabled() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED){
+                == PackageManager.PERMISSION_GRANTED) {
             showLocationSettingsDialog();
         }
     }
@@ -88,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     protected void bindUIElements() {
         pullToRefresh = findViewById(R.id.pullToRefresh);
         date = findViewById(R.id.day);
-        place=findViewById(R.id.city);
+        place = findViewById(R.id.city);
         humid = findViewById(R.id.humidity);
         air = findViewById(R.id.wind);
         temp = findViewById(R.id.celcius);
@@ -107,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MainActivity.requestCode);
-            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -115,12 +127,11 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int MY_PERMISSIONS_ACCESS_FINE_LOCATION, String[] PERMISSIONS_GPS, int[] grantResults) {
         switch (MY_PERMISSIONS_ACCESS_FINE_LOCATION) {
             case 1: {
-                if ((grantResults.length == 1 && grantResults[0]  == PackageManager.PERMISSION_GRANTED) ){
+                if ((grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     //If user presses allow
                     Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
-                   showLocationSettingsDialog();
-                }
-                else{
+                    showLocationSettingsDialog();
+                } else {
                     Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;

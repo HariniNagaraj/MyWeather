@@ -1,9 +1,6 @@
 package com.example.kiran.gps;
 
-import static com.example.kiran.gps.MainActivity.air;
-import static com.example.kiran.gps.MainActivity.humid;
-import static com.example.kiran.gps.MainActivity.place;
-import static com.example.kiran.gps.MainActivity.temp;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.widget.Toast;
@@ -18,11 +15,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WeatherService {
-    private final MainActivity mainActivity;
-    public WeatherService(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    private final Context context;
+
+    public WeatherService(Context context) {
+        this.context = context;
     }
-    void findWeather(double latitude,double longitude) {
+
+    void findWeather(double latitude, double longitude, final MyCallBack callBack) {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -35,10 +34,7 @@ public class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    temp.setText(temperature);
-                    place.setText(city);
-                    humid.setText(humidity);
-                    air.setText(wind);
+                    callBack.updateMyText(city,temperature,wind,humidity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -49,12 +45,16 @@ public class WeatherService {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String jsonError = new String(networkResponse.data);
-                    Toast.makeText(mainActivity, jsonError,
+                    Toast.makeText(context, jsonError,
                             Toast.LENGTH_LONG).show();
                 }
             }
         });
-        RequestQueue queue = Volley.newRequestQueue(mainActivity);
+        RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(jor);
+    }
+
+    public interface MyCallBack {
+        void updateMyText(String city, String temperature, String wind, String humidity);
     }
 }
