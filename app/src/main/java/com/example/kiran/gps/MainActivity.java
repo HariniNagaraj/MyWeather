@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -29,6 +28,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
+    private final LocationServices locationServices = new LocationServices(this);
 
     @BindView(R.id.pullToRefresh) SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.city) TextView place;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.wind) TextView air;
     @BindView(R.id.humidity) TextView humid;
 
-    private double latitude, longitude;
+
     private Intent intent;
     private static final int requestCode = 1;
 
@@ -50,22 +50,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         requestReadLocationPermission();
         showCurrentDate();
-        manageLocationServices();
+        locationServices.manageLocationServices();
         initScreenRefresh();
     }
 
     private void manageLocationServices() {
-        LocationManager locationManager;
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED & ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-            }
-        }
+        locationServices.manageLocationServices();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -76,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 isGPSEnabled();
-                manageLocationServices();
+                locationServices.manageLocationServices();
                 updateWeather();
                 pullToRefresh.setRefreshing(false);
             }
@@ -84,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateWeather() {
-        weather.findWeather(latitude, longitude, new WeatherService.MyCallBack() {
+        weather.findWeather(locationServices.latitude, locationServices.longitude, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
                 place.setText(city);
