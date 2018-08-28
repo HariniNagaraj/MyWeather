@@ -7,11 +7,12 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +21,6 @@ import butterknife.ButterKnife;
 import com.example.kiran.gps.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
     ActivityMainBinding activityMainBinding;
     ListAdapter adapter;
     List<String> arrayList= new ArrayList<>();
@@ -40,21 +40,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setTitle("Pull To Refresh");
+        ButterKnife.bind(this);
+        sampleCityList();
+        adapter=new ListAdapter(arrayList);
+        onQueryTextListener();
+        locationService.requestReadLocationPermission();
+        showCurrentDate();
+        locationService.fetchLocation();
+        initScreenRefresh();
+    }
 
+    private void onQueryTextListener() {
+        activityMainBinding.searchBar.setQueryHint("City Name");
+        activityMainBinding.searchBar.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+
+    private void sampleCityList() {
         arrayList.add("Delhi");
         arrayList.add("Mumbai");
         arrayList.add("kolkata");
         arrayList.add("Bangalore");
         arrayList.add("Hyderabad");
-
-
-
-
-        ButterKnife.bind(this);
-        locationService.requestReadLocationPermission();
-        showCurrentDate();
-        locationService.fetchLocation();
-        initScreenRefresh();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -96,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         String formattedDate = simpleDateFormat.format(day);
         date.setText(formattedDate);
     }
+
 }
 
 
