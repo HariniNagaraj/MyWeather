@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-public class LocationServices extends AppCompatActivity {
+public class LocationService {
     protected double latitude, longitude;
     private final MainActivity mainActivity;
-    public LocationServices(MainActivity mainActivity) {
+    public LocationService(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
@@ -58,7 +58,6 @@ public class LocationServices extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
     public void onRequestPermissionsResult(int MY_PERMISSIONS_ACCESS_FINE_LOCATION, String[] PERMISSIONS_GPS, int[] grantResults) {
         switch (MY_PERMISSIONS_ACCESS_FINE_LOCATION) {
             case 1: {

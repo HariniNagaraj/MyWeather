@@ -1,6 +1,7 @@
 package com.example.kiran.gps;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     private final WeatherService weather = new WeatherService(this);
-    private final LocationServices locationServices = new LocationServices(this);
+    private final LocationService locationService = new LocationService(this);
 
     @BindView(R.id.pullToRefresh) SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.city) TextView place;
@@ -31,29 +32,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Pull To Refresh");
         ButterKnife.bind(this);
-        locationServices.requestReadLocationPermission();
+        locationService.requestReadLocationPermission();
         showCurrentDate();
-        locationServices.fetchLocation();
+        locationService.fetchLocation();
         initScreenRefresh();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initScreenRefresh() {
-        locationServices.isGPSEnabled();
+        locationService.isGPSEnabled();
         updateWeather();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                locationServices.isGPSEnabled();
-                locationServices.fetchLocation();
+                locationService.isGPSEnabled();
+                locationService.fetchLocation();
                 updateWeather();
                 pullToRefresh.setRefreshing(false);
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        locationService.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
     private void updateWeather() {
-        weather.findWeather(locationServices.latitude, locationServices.longitude, new WeatherService.MyCallBack() {
+        weather.findWeather(locationService.latitude, locationService.longitude, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
                 place.setText(city);
