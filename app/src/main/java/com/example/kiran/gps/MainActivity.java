@@ -1,15 +1,19 @@
 package com.example.kiran.gps;
 
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +22,8 @@ import com.example.kiran.gps.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding activityMainBinding;
+    ListAdapter adapter;
+    List<String> arrayList= new ArrayList<>();
     private final WeatherService weather = new WeatherService(this);
     private final LocationService locationService = new LocationService(this);
 
@@ -32,8 +38,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setTitle("Pull To Refresh");
+
+        arrayList.add("Delhi");
+        arrayList.add("Mumbai");
+        arrayList.add("kolkata");
+        arrayList.add("Bangalore");
+        arrayList.add("Hyderabad");
+
+
+
+
         ButterKnife.bind(this);
         locationService.requestReadLocationPermission();
         showCurrentDate();
