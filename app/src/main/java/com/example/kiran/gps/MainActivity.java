@@ -1,11 +1,13 @@
 package com.example.kiran.gps;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.SearchView;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    String searchCity;
     private final WeatherService weather = new WeatherService(this);
     private final LocationService locationService = new LocationService(this);
 
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
         String formattedDate = simpleDateFormat.format(day);
         date.setText(formattedDate);
-    }
+        }
 }
 
 
