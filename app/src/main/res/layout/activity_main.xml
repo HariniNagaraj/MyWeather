@@ -12,6 +12,13 @@
         android:background="@drawable/background"
     tools:context=".MainActivity">
 
+        <SearchView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_bar"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            />
 
     <TextView
         android:id="@+id/celcius"
@@ -34,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="48dp"
         android:gravity="center"
         android:hint="place"
         android:text=""
@@ -121,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="73dp"
+            android:layout_marginTop="85dp"
             android:fontFamily="sans-serif-light"
             android:hint="date"
             android:text=""
