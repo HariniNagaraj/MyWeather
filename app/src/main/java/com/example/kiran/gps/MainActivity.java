@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setTitle("Pull To Refresh");
         ButterKnife.bind(this);
+
+
         sampleCityList();
-        adapter=new ListAdapter(arrayList);
+
         onQueryTextListener();
         locationService.requestReadLocationPermission();
         showCurrentDate();
@@ -50,11 +52,14 @@ public class MainActivity extends AppCompatActivity {
         initScreenRefresh();
     }
 
+
+
+
+
     private void onQueryTextListener() {
-        activityMainBinding.searchBar.setQueryHint("City Name");
         activityMainBinding.searchBar.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextSubmit(String Query) {
                 return false;
             }
 
@@ -72,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
         arrayList.add("kolkata");
         arrayList.add("Bangalore");
         arrayList.add("Hyderabad");
+        adapter= new ListAdapter(arrayList);
+activityMainBinding.listView.setAdapter(adapter);
+        activityMainBinding.searchBar.setActivated(true);
+        activityMainBinding.searchBar.setQueryHint("Type your keyword here");
+        activityMainBinding.searchBar.onActionViewExpanded();
+        activityMainBinding.searchBar.setIconified(false);
+        activityMainBinding.searchBar.clearFocus();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
