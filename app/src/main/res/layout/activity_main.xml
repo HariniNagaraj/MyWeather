@@ -32,7 +32,7 @@
             <ListView
                 android:id="@+id/list_view"
                 android:layout_width="fill_parent"
-                android:background="@color/colorPrimaryDark"
+                android:background="#A6569D"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"

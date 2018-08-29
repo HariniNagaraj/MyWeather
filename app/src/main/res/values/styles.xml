@@ -12,6 +12,7 @@
         <item name="windowActionBar">false</item>
         <item name="android:editTextColor">@android:color/white</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:textColorHint">@android:color/white</item>
         <item name="android:windowFullscreen">false</item>
     </style>
 </resources>

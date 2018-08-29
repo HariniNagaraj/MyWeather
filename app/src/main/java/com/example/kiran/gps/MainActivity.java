@@ -157,6 +157,7 @@ SearchView searchView;
             public void onRefresh() {
                 locationService.showGPSSettingDialogIfRequired();
                 locationService.fetchLocation();
+                updateWeather(locationService.latitude,locationService.longitude);
                 pullToRefresh.setRefreshing(false);
             }
         });
