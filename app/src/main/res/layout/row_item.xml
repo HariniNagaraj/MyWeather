@@ -16,6 +16,7 @@
             android:layout_centerVertical="true"
             android:textAllCaps="false"
             android:textSize="20sp"
+            android:padding="5dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 

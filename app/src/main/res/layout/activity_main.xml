@@ -25,17 +25,33 @@
             <SearchView
                 android:id="@+id/searchBar"
                 android:layout_alignParentRight="true"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <ListView
                 android:id="@+id/list_view"
                 android:layout_width="fill_parent"
+                android:background="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/searchBar"
+                android:layout_below="@+id/day"
                 android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="85dp"
+                android:fontFamily="sans-serif-light"
+                android:hint="date"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="25sp" />
+
 
 
             <TextView
@@ -106,6 +122,8 @@
                     android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
+
+
             </LinearLayout>
 
             <RelativeLayout
@@ -140,20 +158,12 @@
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="85dp"
-                    android:fontFamily="sans-serif-light"
-                    android:hint="date"
-                    android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp" />
+
+
 
             </RelativeLayout>
+
+
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

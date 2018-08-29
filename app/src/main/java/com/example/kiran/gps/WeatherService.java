@@ -3,6 +3,7 @@ package com.example.kiran.gps;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.widget.Toast;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -14,8 +15,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 public class WeatherService {
     private final Context context;
 
@@ -24,8 +23,8 @@ public class WeatherService {
     }
 
     void findWeather(String city, final MyCallBack callBack) {
-        String url = "https://api.openweathermap.org/data/2.5/weatherService?q=" + city + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+         String url = "https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase();
+         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(JSONObject response) {

@@ -1,12 +1,14 @@
 package com.example.kiran.gps;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     List<String> citiesList = new ArrayList<>();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
-
+SearchView searchView;
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.city)
@@ -91,8 +93,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String city = adapter.mData.get(position);
-                String cityURL = "https://api.openweathermap.org/data/2.5/weatherService?q=" + city + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
-                updateWeather(cityURL);
+                updateWeather(city);
             }
         });
         setupOnQueryTextListener();
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         }
         super.onBackPressed();
     }
+
 
     private void setupOnQueryTextListener() {
         activityMainBinding.searchBar.setOnSearchClickListener(new View.OnClickListener() {
@@ -141,9 +143,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
 
     @SuppressWarnings("SpellCheckingInspection")
     private void setupCityList() {
-        citiesList.add("Delhi");
-        citiesList.add("Mumbai");
-        citiesList.add("kolkata");
+        citiesList.add("Kolkata");
         citiesList.add("Bangalore");
         citiesList.add("Hyderabad");
 
