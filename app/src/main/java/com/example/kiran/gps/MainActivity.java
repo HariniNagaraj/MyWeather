@@ -92,6 +92,7 @@ SearchView searchView;
         activityMainBinding.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                listView.setVisibility(View.GONE);
                 String city = adapter.mData.get(position);
                 updateWeather(city);
             }
