@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -26,6 +27,8 @@ import butterknife.ButterKnife;
 import com.example.kiran.gps.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
+
+    private ArrayAdapter<String> drawerAdapter;
     ActivityMainBinding activityMainBinding;
     ListAdapter adapter;
     List<String> citiesList = new ArrayList<>();
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     TextView humid;
     @BindView(R.id.list_view)
     ListView listView;
+    @BindView(R.id.navList)
+    ListView mDrawerList;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -53,10 +58,17 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         ButterKnife.bind(this);
+        showDrawerItems();
         setupSearchBar();
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
+    }
+
+    private void showDrawerItems() {
+        String[] dummyCityList = { "Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad" };
+        drawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dummyCityList);
+        mDrawerList.setAdapter(drawerAdapter);
     }
 
     @Override
