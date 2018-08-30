@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     private void setupSearchBar(SearchView searchBar) {
         searchManager.setupSearchBar(searchBar);
         searchManager.setUpAdapterForSearchBar(listView);
+        searchManager.setupOnQueryTextListener(searchBar,listView);
     }
 
     @Override
