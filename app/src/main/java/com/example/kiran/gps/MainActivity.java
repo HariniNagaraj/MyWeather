@@ -19,8 +19,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
 
-    final SearchManager searchManager = new SearchManager(this);
-    private final DrawerManager drawerManager = new DrawerManager(this);
+    SearchManager searchManager = new SearchManager();
+    private final DrawerManager drawerManager = new DrawerManager();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
 
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        drawerManager.showDrawerItems();
+        drawerManager.showDrawerItems(mDrawerList,this);
         setupSearchBar(searchBar);
         setupInitialUI();
         initScreenRefresh();
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
 
     private void setupSearchBar(SearchView searchBar) {
         searchManager.setupSearchBar(searchBar);
-        searchManager.setUpAdapterForSearchBar(listView);
+        searchManager.setUpAdapterForSearchBar(listView,this);
         searchManager.setupOnQueryTextListener(searchBar,listView);
     }
 
