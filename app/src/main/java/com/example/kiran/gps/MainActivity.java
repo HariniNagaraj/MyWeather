@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onBackPressed();
     }
 
-
     private void setupOnQueryTextListener() {
         activityMainBinding.searchBar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
