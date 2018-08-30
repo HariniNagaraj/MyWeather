@@ -1,14 +1,12 @@
 package com.example.kiran.gps;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -30,11 +28,10 @@ import com.example.kiran.gps.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
     ActivityMainBinding activityMainBinding;
     ListAdapter adapter;
-
     List<String> citiesList = new ArrayList<>();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
-SearchView searchView;
+
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.city)
@@ -93,7 +90,7 @@ SearchView searchView;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 listView.setVisibility(View.GONE);
-                String city = adapter.mData.get(position);
+                String city = adapter.filteredData.get(position);
                 updateWeather(city);
             }
         });
@@ -147,12 +144,10 @@ SearchView searchView;
         citiesList.add("Kolkata");
         citiesList.add("Bangalore");
         citiesList.add("Hyderabad");
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initScreenRefresh() {
-
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -205,7 +200,6 @@ SearchView searchView;
     public void locationUpdated() {
         updateWeather(locationService.latitude, locationService.longitude);
     }
-
 }
 
 

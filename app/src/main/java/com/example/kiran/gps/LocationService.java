@@ -11,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -19,12 +18,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import java.util.Objects;
-
 public class LocationService implements LocationListener {
-    protected double latitude, longitude;
+
     private final MainActivity mainActivity;
     private LocationServiceDelegate delegate;
+    protected double latitude, longitude;
     private LocationManager locationManager;
 
     public LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {

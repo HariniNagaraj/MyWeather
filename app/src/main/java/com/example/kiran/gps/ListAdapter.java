@@ -14,25 +14,24 @@ import java.util.List;
 
 public class ListAdapter extends BaseAdapter implements Filterable {
 
-    List<String> mData;
+    List<String> filteredData;
     List<String> mStringFilterList;
     ValueFilter valueFilter;
     private LayoutInflater inflater;
 
     public ListAdapter(List<String> cancel_type) {
-        mData=cancel_type;
+        filteredData =cancel_type;
         mStringFilterList = cancel_type;
     }
 
-
     @Override
     public int getCount() {
-        return mData.size();
+        return filteredData.size();
     }
 
     @Override
     public String getItem(int position) {
-        return mData.get(position);
+        return filteredData.get(position);
     }
 
     @Override
@@ -42,15 +41,12 @@ public class ListAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
-
         if (inflater == null) {
             inflater = (LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         RowItemBinding rowItemBinding = DataBindingUtil.inflate(inflater, R.layout.row_item, parent, false);
-        rowItemBinding.stringName.setText(mData.get(position));
-
-
+        rowItemBinding.stringName.setText(filteredData.get(position));
         return rowItemBinding.getRoot();
     }
 
@@ -66,7 +62,6 @@ public class ListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-
             if (constraint != null && constraint.length() > 0) {
                 List<String> filterList = new ArrayList<>();
                 for (int i = 0; i < mStringFilterList.size(); i++) {
@@ -81,16 +76,13 @@ public class ListAdapter extends BaseAdapter implements Filterable {
                 results.values = mStringFilterList;
             }
             return results;
-
         }
 
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            mData = (List<String>) results.values;
+            filteredData = (List<String>) results.values;
             notifyDataSetChanged();
         }
-
     }
-
 }

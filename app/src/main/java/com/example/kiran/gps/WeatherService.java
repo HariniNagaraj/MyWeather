@@ -3,7 +3,6 @@ package com.example.kiran.gps;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.widget.Toast;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -57,7 +56,6 @@ public class WeatherService {
 
     void findWeather(double latitude, double longitude, final MyCallBack callBack) {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
-
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
