@@ -8,6 +8,7 @@
         android:allowBackup="true"
         android:icon="@drawable/weathericon"
         android:label="MyWeather"
+
         android:roundIcon="@drawable/weathericon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">

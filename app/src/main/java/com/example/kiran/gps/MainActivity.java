@@ -13,23 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
 
+    final SearchManager searchManager = new SearchManager(this);
     private ArrayAdapter<String> drawerAdapter;
-    //    ActivityMainBinding activityMainBinding;
-    ListAdapter adapter;
-    List<String> citiesList = new ArrayList<>();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
 
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         showDrawerItems();
-        setupSearchBar();
+        searchManager.setupSearchBar();
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
@@ -97,26 +91,6 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         }
     }
 
-    private void setupSearchBar() {
-        searchBar.setIconifiedByDefault(true);
-        searchBar.setMaxWidth(Integer.MAX_VALUE);
-        searchBar.setFocusable(false);
-        searchBar.setFocusableInTouchMode(true);
-        searchBar.setQueryHint("Type your keyword here");
-        setupCityList();
-        adapter = new ListAdapter(citiesList);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                listView.setVisibility(View.GONE);
-                String city = adapter.filteredData.get(position);
-                updateWeather(city);
-            }
-        });
-        setupOnQueryTextListener();
-    }
-
     @Override
     public void onBackPressed() {
         if (!searchBar.isIconified()) {
@@ -126,43 +100,6 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
             return;
         }
         super.onBackPressed();
-    }
-
-    private void setupOnQueryTextListener() {
-        searchBar.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listView.setVisibility(View.VISIBLE);
-            }
-        });
-
-        searchBar.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                listView.setVisibility(View.GONE);
-                return true;
-            }
-        });
-        searchBar.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String Query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                listView.setVisibility(View.VISIBLE);
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    private void setupCityList() {
-        citiesList.add("Kolkata");
-        citiesList.add("Bangalore");
-        citiesList.add("Hyderabad");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -184,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         locationService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void updateWeather(String city) {
+    void updateWeather(String city) {
         weatherService.findWeather(city, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
