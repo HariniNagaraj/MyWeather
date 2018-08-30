@@ -50,13 +50,16 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         drawerManager.showDrawerItems();
-        searchManager.setupSearchBar();
+        setupSearchBar(searchBar);
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
     }
 
-
+    private void setupSearchBar(SearchView searchBar) {
+        searchManager.setupSearchBar(searchBar);
+        searchManager.setUpAdapterForSearchBar(listView);
+    }
 
     @Override
     protected void onResume() {
