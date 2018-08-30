@@ -1,12 +1,12 @@
 package com.example.kiran.gps;
 
-import android.databinding.DataBindingUtil;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,12 +24,10 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.example.kiran.gps.databinding.ActivityMainBinding;
-
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
 
     private ArrayAdapter<String> drawerAdapter;
-    ActivityMainBinding activityMainBinding;
+    //    ActivityMainBinding activityMainBinding;
     ListAdapter adapter;
     List<String> citiesList = new ArrayList<>();
     private final WeatherService weatherService = new WeatherService(this);
@@ -51,12 +49,14 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     ListView listView;
     @BindView(R.id.navList)
     ListView mDrawerList;
+    @BindView(R.id.searchBar)
+    SearchView searchBar;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         showDrawerItems();
         setupSearchBar();
@@ -66,9 +66,17 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     }
 
     private void showDrawerItems() {
-        String[] dummyCityList = { "Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad" };
+        final String[] dummyCityList = {"Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad"};
         drawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dummyCityList);
         mDrawerList.setAdapter(drawerAdapter);
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                String city = drawerAdapter.getItem(i);
+                Log.d("drawer", city);
+
+            }
+        });
     }
 
     @Override
@@ -90,15 +98,15 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     }
 
     private void setupSearchBar() {
-        activityMainBinding.searchBar.setIconifiedByDefault(true);
-        activityMainBinding.searchBar.setMaxWidth(Integer.MAX_VALUE);
-        activityMainBinding.searchBar.setFocusable(false);
-        activityMainBinding.searchBar.setFocusableInTouchMode(true);
-        activityMainBinding.searchBar.setQueryHint("Type your keyword here");
+        searchBar.setIconifiedByDefault(true);
+        searchBar.setMaxWidth(Integer.MAX_VALUE);
+        searchBar.setFocusable(false);
+        searchBar.setFocusableInTouchMode(true);
+        searchBar.setQueryHint("Type your keyword here");
         setupCityList();
         adapter = new ListAdapter(citiesList);
-        activityMainBinding.listView.setAdapter(adapter);
-        activityMainBinding.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 listView.setVisibility(View.GONE);
@@ -111,31 +119,31 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
 
     @Override
     public void onBackPressed() {
-        if (!activityMainBinding.searchBar.isIconified()) {
-            activityMainBinding.searchBar.clearFocus();
+        if (!searchBar.isIconified()) {
+            searchBar.clearFocus();
             listView.setVisibility(View.INVISIBLE);
-            activityMainBinding.searchBar.setIconified(true);
+            searchBar.setIconified(true);
             return;
         }
         super.onBackPressed();
     }
 
     private void setupOnQueryTextListener() {
-        activityMainBinding.searchBar.setOnSearchClickListener(new View.OnClickListener() {
+        searchBar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listView.setVisibility(View.VISIBLE);
             }
         });
 
-        activityMainBinding.searchBar.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchBar.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 listView.setVisibility(View.GONE);
                 return true;
             }
         });
-        activityMainBinding.searchBar.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+        searchBar.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String Query) {
                 return false;
@@ -164,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
             public void onRefresh() {
                 locationService.showGPSSettingDialogIfRequired();
                 locationService.fetchLocation();
-                updateWeather(locationService.latitude,locationService.longitude);
+                updateWeather(locationService.latitude, locationService.longitude);
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -180,22 +188,23 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         weatherService.findWeather(city, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
-                place.setText(city);
-                humid.setText(humidity);
-                air.setText(wind);
-                temp.setText(temperature);
+                updateUI(city, temperature, wind, humidity);
             }
         });
+    }
+
+    private void updateUI(String city, String temperature, String wind, String humidity) {
+        place.setText(city);
+        humid.setText(humidity);
+        air.setText(wind);
+        temp.setText(temperature);
     }
 
     private void updateWeather(double latitude, double longitude) {
         weatherService.findWeather(latitude, longitude, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
-                place.setText(city);
-                humid.setText(humidity);
-                air.setText(wind);
-                temp.setText(temperature);
+                updateUI(city, temperature, wind, humidity);
             }
         });
     }
