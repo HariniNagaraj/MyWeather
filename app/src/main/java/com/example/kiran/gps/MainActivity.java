@@ -6,10 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -23,7 +20,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
 
     final SearchManager searchManager = new SearchManager(this);
-    private ArrayAdapter<String> drawerAdapter;
+    private final DrawerManager drawerManager = new DrawerManager(this);
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
 
@@ -52,26 +49,14 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        showDrawerItems();
+        drawerManager.showDrawerItems();
         searchManager.setupSearchBar();
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
     }
 
-    private void showDrawerItems() {
-        final String[] dummyCityList = {"Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad"};
-        drawerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dummyCityList);
-        mDrawerList.setAdapter(drawerAdapter);
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                String city = drawerAdapter.getItem(i);
-                Log.d("drawer", city);
 
-            }
-        });
-    }
 
     @Override
     protected void onResume() {
