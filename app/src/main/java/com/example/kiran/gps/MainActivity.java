@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         locationService.onRequestPermissionsResult(requestCode, grantResults);
     }
 
-    private void updateWeather(String city) {
+    void updateWeather(String city) {
         weatherService.findWeather(city, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {

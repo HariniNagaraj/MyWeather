@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 
 public class SearchManager {
 
+
     private final List<String> citiesList = new ArrayList<>();
     @BindView(R.id.citiesSuggestionsList)
     ListView citiesSuggestionsList;

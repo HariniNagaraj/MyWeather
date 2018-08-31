@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 class DrawerManager {
 
+    MainActivity mainActivity;
     private final ArrayList<String> addCityToDrawer = new ArrayList<>();
 
-    void showDrawerItems(ListView drawerListView, MainActivity mainActivity, String city) {
+    void showDrawerItems(ListView drawerListView, final MainActivity mainActivity, String city) {
         if (addCityToDrawer.contains(city)) {
             return;
         } else {
@@ -22,11 +23,11 @@ class DrawerManager {
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                // String city = drawerAdapter.getItem(i);
+                String city = drawerAdapter.getItem(i);
+                mainActivity.updateWeather(city);
 
             }
         });
     }
-
 
 }
