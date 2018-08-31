@@ -5,8 +5,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,7 +24,7 @@ public class SearchManager {
 
     SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
-        ButterKnife.bind(this,activity);
+        ButterKnife.bind(this, activity);
         setupSearchBar();
     }
 
@@ -43,7 +45,7 @@ public class SearchManager {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 listView.setVisibility(View.GONE);
                 String city = adapter.filteredData.get(position);
-                delegate.getCity(city);
+                delegate.getCityForNaVBar(city);
                 delegate.cityChanged(city);
             }
         });
@@ -104,6 +106,7 @@ public class SearchManager {
 
     interface SearchManagerDelegate {
         void cityChanged(String city);
-        void getCity(String city);
+
+        void getCityForNaVBar(String city);
     }
 }

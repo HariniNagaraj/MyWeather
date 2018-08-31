@@ -10,20 +10,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+
 import com.example.kiran.gps.databinding.RowItemBinding;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 class ListAdapter extends BaseAdapter implements Filterable {
 
-    List<String> filteredData;
     private final List<String> mStringFilterList;
     private ValueFilter valueFilter;
     private LayoutInflater inflater;
+    List<String> filteredData;
 
     ListAdapter(List<String> cancel_type) {
-        filteredData =cancel_type;
+        filteredData = cancel_type;
         mStringFilterList = cancel_type;
     }
 

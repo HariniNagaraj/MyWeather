@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.widget.Toast;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,10 +12,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 class WeatherService {
+
     private final Context context;
 
     public WeatherService(Context context) {
@@ -22,8 +25,8 @@ class WeatherService {
     }
 
     void findWeather(String city, final MyCallBack callBack) {
-         String url = "https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase();
-         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        String url = "https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase();
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(JSONObject response) {
@@ -34,7 +37,7 @@ class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    callBack.updateMyText(city,temperature,wind,humidity);
+                    callBack.updateMyText(city, temperature, wind, humidity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -67,7 +70,7 @@ class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    callBack.updateMyText(city,temperature,wind,humidity);
+                    callBack.updateMyText(city, temperature, wind, humidity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

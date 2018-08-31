@@ -9,20 +9,20 @@ import java.util.ArrayList;
 
 class DrawerManager {
 
-    ArrayList<String> drawerCity = new ArrayList<>();
+    private final ArrayList<String> addCityToDrawer = new ArrayList<>();
 
-    void showDrawerItems(ListView listView, MainActivity mainActivity, String city) {
-        if(drawerCity.contains(city)){
+    void showDrawerItems(ListView drawerListView, MainActivity mainActivity, String city) {
+        if (addCityToDrawer.contains(city)) {
             return;
-        }else {
-            drawerCity.add(city);
+        } else {
+            addCityToDrawer.add(city);
         }
-        final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, drawerCity);
-        listView.setAdapter(drawerAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, addCityToDrawer);
+        drawerListView.setAdapter(drawerAdapter);
+        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                String city = drawerAdapter.getItem(i);
+                // String city = drawerAdapter.getItem(i);
 
             }
         });

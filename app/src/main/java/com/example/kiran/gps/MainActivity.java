@@ -8,10 +8,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         locationService.onRequestPermissionsResult(requestCode, grantResults);
     }
 
-    void updateWeather(String city) {
+    private void updateWeather(String city) {
         weatherService.findWeather(city, new WeatherService.MyCallBack() {
             @Override
             public void updateMyText(String city, String temperature, String wind, String humidity) {
@@ -138,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     @Override
-    public void getCity(String city) {
-        drawerManager.showDrawerItems(mDrawerList,this,city);
+    public void getCityForNaVBar(String city) {
+        drawerManager.showDrawerItems(mDrawerList, this, city);
     }
 }
 
