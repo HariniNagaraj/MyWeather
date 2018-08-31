@@ -12,7 +12,11 @@ class DrawerManager {
     ArrayList<String> drawerCity = new ArrayList<>();
 
     void showDrawerItems(ListView listView, MainActivity mainActivity, String city) {
-        drawerCity.add(city);
+        if(drawerCity.contains(city)){
+            return;
+        }else {
+            drawerCity.add(city);
+        }
         final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, drawerCity);
         listView.setAdapter(drawerAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
