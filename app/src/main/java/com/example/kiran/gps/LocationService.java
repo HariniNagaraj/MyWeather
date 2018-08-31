@@ -28,7 +28,7 @@ class LocationService implements LocationListener {
     double longitude;
     private final LocationManager locationManager;
 
-    public LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {
+    LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {
         this.mainActivity = mainActivity;
         this.delegate = delegate;
         locationManager = (LocationManager) mainActivity.getSystemService(MainActivity.LOCATION_SERVICE);
@@ -129,5 +129,9 @@ class LocationService implements LocationListener {
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    interface LocationServiceDelegate {
+        void locationUpdated();
     }
 }

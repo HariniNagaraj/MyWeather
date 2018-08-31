@@ -17,7 +17,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationServiceDelegate, SearchManagerDelegate {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
     private SearchManager searchManager;
     private final DrawerManager drawerManager = new DrawerManager();

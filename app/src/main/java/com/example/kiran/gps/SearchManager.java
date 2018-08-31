@@ -102,4 +102,8 @@ public class SearchManager {
     public boolean isExpanded() {
         return !citiesSearchView.isIconified();
     }
+
+    interface SearchManagerDelegate {
+        void cityChanged(String city);
+    }
 }
