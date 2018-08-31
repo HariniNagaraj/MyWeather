@@ -5,15 +5,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchManager {
-
 
     private final List<String> citiesList = new ArrayList<>();
     @BindView(R.id.citiesSuggestionsList)

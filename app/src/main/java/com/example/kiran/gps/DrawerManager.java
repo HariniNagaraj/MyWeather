@@ -4,12 +4,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 
 class DrawerManager {
 
-    MainActivity mainActivity;
     private final ArrayList<String> addCityToDrawer = new ArrayList<>();
 
     void showDrawerItems(ListView drawerListView, final MainActivity mainActivity, String city) {
@@ -25,9 +23,7 @@ class DrawerManager {
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                 String city = drawerAdapter.getItem(i);
                 mainActivity.updateWeather(city);
-
             }
         });
     }
-
 }

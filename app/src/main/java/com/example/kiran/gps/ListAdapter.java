@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-
 import com.example.kiran.gps.databinding.RowItemBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
