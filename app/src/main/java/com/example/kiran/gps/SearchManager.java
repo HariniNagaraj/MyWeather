@@ -43,6 +43,7 @@ public class SearchManager {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 listView.setVisibility(View.GONE);
                 String city = adapter.filteredData.get(position);
+                delegate.getCity(city);
                 delegate.cityChanged(city);
             }
         });
@@ -103,5 +104,6 @@ public class SearchManager {
 
     interface SearchManagerDelegate {
         void cityChanged(String city);
+        void getCity(String city);
     }
 }

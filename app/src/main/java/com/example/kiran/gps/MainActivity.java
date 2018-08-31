@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        drawerManager.showDrawerItems(mDrawerList,this);
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
@@ -136,6 +135,11 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public void cityChanged(String city) {
         updateWeather(city);
+    }
+
+    @Override
+    public void getCity(String city) {
+        drawerManager.showDrawerItems(mDrawerList,this,city);
     }
 }
 
