@@ -14,7 +14,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WeatherService {
+class WeatherService {
     private final Context context;
 
     public WeatherService(Context context) {

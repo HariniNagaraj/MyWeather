@@ -5,7 +5,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DrawerManager {
+class DrawerManager {
 
     void showDrawerItems(ListView listView,MainActivity mainActivity) {
         final String[] dummyCityList = {"Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad"};

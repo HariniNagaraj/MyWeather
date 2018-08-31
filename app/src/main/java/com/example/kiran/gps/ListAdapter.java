@@ -2,6 +2,8 @@ package com.example.kiran.gps;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +13,16 @@ import android.widget.Filterable;
 import com.example.kiran.gps.databinding.RowItemBinding;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class ListAdapter extends BaseAdapter implements Filterable {
+class ListAdapter extends BaseAdapter implements Filterable {
 
     List<String> filteredData;
-    List<String> mStringFilterList;
-    ValueFilter valueFilter;
+    private final List<String> mStringFilterList;
+    private ValueFilter valueFilter;
     private LayoutInflater inflater;
 
-    public ListAdapter(List<String> cancel_type) {
+    ListAdapter(List<String> cancel_type) {
         filteredData =cancel_type;
         mStringFilterList = cancel_type;
     }
@@ -39,13 +42,14 @@ public class ListAdapter extends BaseAdapter implements Filterable {
         return position;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
         if (inflater == null) {
             inflater = (LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-        RowItemBinding rowItemBinding = DataBindingUtil.inflate(inflater, R.layout.row_item, parent, false);
+        RowItemBinding rowItemBinding = DataBindingUtil.inflate(Objects.requireNonNull(inflater), R.layout.row_item, parent, false);
         rowItemBinding.stringName.setText(filteredData.get(position));
         return rowItemBinding.getRoot();
     }

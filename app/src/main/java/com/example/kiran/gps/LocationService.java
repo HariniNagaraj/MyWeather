@@ -18,12 +18,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-public class LocationService implements LocationListener {
+import java.util.Objects;
+
+class LocationService implements LocationListener {
 
     private final MainActivity mainActivity;
-    private LocationServiceDelegate delegate;
-    protected double latitude, longitude;
-    private LocationManager locationManager;
+    private final LocationServiceDelegate delegate;
+    double latitude;
+    double longitude;
+    private final LocationManager locationManager;
 
     public LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {
         this.mainActivity = mainActivity;
@@ -66,9 +69,11 @@ public class LocationService implements LocationListener {
     }
 
     boolean showGPSSettingDialogIfRequired() {
-        if (!isGpsEnabled()) {
-            showGPSSettingsDialog();
-            return false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!isGpsEnabled()) {
+                showGPSSettingsDialog();
+                return false;
+            }
         }
         return true;
     }
@@ -91,9 +96,10 @@ public class LocationService implements LocationListener {
         alertDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private boolean isGpsEnabled() {
         final LocationManager manager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
-        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return Objects.requireNonNull(manager).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override

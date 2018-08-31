@@ -10,7 +10,7 @@ import java.util.List;
 public class SearchManager {
 
     private ListAdapter adapter;
-    private final List<String> citiesList = new ArrayList<String>();
+    private final List<String> citiesList = new ArrayList<>();
 
     void setupSearchBar(SearchView searchView) {
         searchView.setIconifiedByDefault(true);
