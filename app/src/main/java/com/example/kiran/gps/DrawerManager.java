@@ -8,8 +8,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 class DrawerManager {
+
+    ArrayList<String> drawerCity = new ArrayList<>();
+
     void showDrawerItems(ListView listView, MainActivity mainActivity, String city) {
-        ArrayList<String> drawerCity = new ArrayList<>();
         drawerCity.add(city);
         final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, drawerCity);
         listView.setAdapter(drawerAdapter);
