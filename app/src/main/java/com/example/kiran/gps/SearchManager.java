@@ -9,8 +9,8 @@ import java.util.List;
 
 public class SearchManager {
 
-    ListAdapter adapter;
-    List<String> citiesList = new ArrayList<String>();
+    private ListAdapter adapter;
+    private final List<String> citiesList = new ArrayList<String>();
 
     void setupSearchBar(SearchView searchView) {
         searchView.setIconifiedByDefault(true);
@@ -65,7 +65,7 @@ public class SearchManager {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    void setupCityList() {
+    private void setupCityList() {
         citiesList.add("Kolkata");
         citiesList.add("Bangalore");
         citiesList.add("Hyderabad");

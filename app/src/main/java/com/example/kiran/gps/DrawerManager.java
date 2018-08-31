@@ -7,16 +7,14 @@ import android.widget.ListView;
 
 public class DrawerManager {
 
-    ArrayAdapter<String> drawerAdapter;
-
     void showDrawerItems(ListView listView,MainActivity mainActivity) {
         final String[] dummyCityList = {"Bangalore", "Kolkata", "Mumbai", "Delhi", "Hyderabad"};
-        drawerAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, dummyCityList);
+        ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, dummyCityList);
         listView.setAdapter(drawerAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                String city = drawerAdapter.getItem(i);
+               // String city = drawerAdapter.getItem(i);
             }
         });
     }

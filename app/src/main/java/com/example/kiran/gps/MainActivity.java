@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
 
-    SearchManager searchManager = new SearchManager();
+    private final SearchManager searchManager = new SearchManager();
     private final DrawerManager drawerManager = new DrawerManager();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
