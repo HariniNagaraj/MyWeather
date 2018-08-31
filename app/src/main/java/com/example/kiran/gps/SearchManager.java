@@ -5,10 +5,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,20 +18,20 @@ public class SearchManager {
     @BindView(R.id.citiesSearchView)
     SearchView citiesSearchView;
     private ListAdapter adapter;
-    private SearchManagerDelegate delegate;
+    private final SearchManagerDelegate delegate;
 
     SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
-        ButterKnife.bind(activity);
+        ButterKnife.bind(this,activity);
         setupSearchBar();
     }
 
-    private void setupSearchBar(SearchView searchView) {
-        searchView.setIconifiedByDefault(true);
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setFocusable(false);
-        searchView.setFocusableInTouchMode(true);
-        searchView.setQueryHint("Search City");
+    private void setupSearchBarIcon() {
+        citiesSearchView.setIconifiedByDefault(true);
+        citiesSearchView.setMaxWidth(Integer.MAX_VALUE);
+        citiesSearchView.setFocusable(false);
+        citiesSearchView.setFocusableInTouchMode(true);
+        citiesSearchView.setQueryHint("Search City");
         setupCityList();
     }
 
@@ -88,7 +86,7 @@ public class SearchManager {
     }
 
     private void setupSearchBar() {
-        setupSearchBar(citiesSearchView);
+        setupSearchBarIcon();
         setUpAdapterForSearchBar(citiesSuggestionsList);
         setupOnQueryTextListener(citiesSearchView, citiesSuggestionsList);
     }

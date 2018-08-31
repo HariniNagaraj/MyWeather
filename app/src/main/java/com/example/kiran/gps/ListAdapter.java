@@ -1,6 +1,5 @@
 package com.example.kiran.gps;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -50,7 +49,7 @@ class ListAdapter extends BaseAdapter implements Filterable {
             inflater = (LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-        @SuppressLint("ViewHolder") RowItemBinding rowItemBinding = DataBindingUtil.inflate(Objects.requireNonNull(inflater), R.layout.row_item, parent, false);
+        RowItemBinding rowItemBinding = DataBindingUtil.inflate(Objects.requireNonNull(inflater), R.layout.row_item, parent, false);
         rowItemBinding.stringName.setText(filteredData.get(position));
         return rowItemBinding.getRoot();
     }

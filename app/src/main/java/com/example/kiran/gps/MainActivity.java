@@ -8,12 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        searchManager = new SearchManager(this, this);
         drawerManager.showDrawerItems(mDrawerList,this);
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
+        searchManager = new SearchManager(this, this);
     }
 
     @Override
