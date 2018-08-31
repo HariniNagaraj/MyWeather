@@ -4,37 +4,43 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchManager {
 
-    private ListAdapter adapter;
     private final List<String> citiesList = new ArrayList<>();
+    private ListAdapter adapter;
+    private SearchManagerDelegate delegate;
 
-    void setupSearchBar(SearchView searchView) {
+    SearchManager(SearchManagerDelegate delegate) {
+        this.delegate = delegate;
+    }
+
+    private void setupSearchBar(SearchView searchView) {
         searchView.setIconifiedByDefault(true);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setFocusable(false);
         searchView.setFocusableInTouchMode(true);
         searchView.setQueryHint("Search City");
         setupCityList();
-        }
+    }
 
-    void setUpAdapterForSearchBar(final ListView listView,final MainActivity mainActivity) {
+    private void setUpAdapterForSearchBar(final ListView listView) {
         adapter = new ListAdapter(citiesList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-               listView.setVisibility(View.GONE);
+                listView.setVisibility(View.GONE);
                 String city = adapter.filteredData.get(position);
-                mainActivity.updateWeather(city);
+                delegate.cityChanged(city);
             }
         });
     }
 
-    void setupOnQueryTextListener(final SearchView searchView, final ListView listView) {
+    private void setupOnQueryTextListener(final SearchView searchView, final ListView listView) {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +51,7 @@ public class SearchManager {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-              listView.setVisibility(View.GONE);
+                listView.setVisibility(View.GONE);
                 return true;
             }
         });
@@ -57,7 +63,7 @@ public class SearchManager {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               listView.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.VISIBLE);
                 adapter.getFilter().filter(newText);
                 return false;
             }
@@ -69,5 +75,11 @@ public class SearchManager {
         citiesList.add("Kolkata");
         citiesList.add("Bangalore");
         citiesList.add("Hyderabad");
+    }
+
+    void setupSearchBar(SearchView citiesSearchView, ListView citiesSuggestionsList) {
+        setupSearchBar(citiesSearchView);
+        setUpAdapterForSearchBar(citiesSuggestionsList);
+        setupOnQueryTextListener(citiesSearchView, citiesSuggestionsList);
     }
 }

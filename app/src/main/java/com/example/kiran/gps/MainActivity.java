@@ -10,16 +10,18 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationServiceDelegate {
+public class MainActivity extends AppCompatActivity implements LocationServiceDelegate, SearchManagerDelegate {
 
-    private final SearchManager searchManager = new SearchManager();
+    private SearchManager searchManager;
     private final DrawerManager drawerManager = new DrawerManager();
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
@@ -49,17 +51,12 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        searchManager = new SearchManager(this);
         drawerManager.showDrawerItems(mDrawerList,this);
-        setupSearchBar(searchBar);
+        searchManager.setupSearchBar(this.searchBar, this.listView);
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
-    }
-
-    private void setupSearchBar(SearchView searchBar) {
-        searchManager.setupSearchBar(searchBar);
-        searchManager.setUpAdapterForSearchBar(listView,this);
-        searchManager.setupOnQueryTextListener(searchBar,listView);
     }
 
     @Override
@@ -145,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     @Override
     public void locationUpdated() {
         updateWeather(locationService.latitude, locationService.longitude);
+    }
+
+    @Override
+    public void cityChanged(String city) {
+        updateWeather(city);
     }
 }
 
