@@ -1,5 +1,7 @@
 package com.example.kiran.gps;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +20,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
     private SearchManager searchManager;
-    private final DrawerManager drawerManager = new DrawerManager();
+    private final DrawerManager drawerManager = new DrawerManager(this);
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
 

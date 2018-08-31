@@ -1,5 +1,7 @@
 package com.example.kiran.gps;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -8,9 +10,15 @@ import java.util.ArrayList;
 
 class DrawerManager {
 
+    private SharedPreferences saveCityListFromNavBar;
     private final ArrayList<String> addCityToDrawer = new ArrayList<>();
+    private final Context context;
+    public DrawerManager(Context context) {
+        this.context=context;
+    }
 
     void showDrawerItems(ListView drawerListView, final MainActivity mainActivity, String city) {
+        saveCityListFromNavBar=context.getSharedPreferences("savedCities", Context.MODE_PRIVATE);
         if (addCityToDrawer.contains(city)) {
             return;
         } else {
