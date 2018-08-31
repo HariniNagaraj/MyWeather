@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @BindView(R.id.navList)
     ListView mDrawerList;
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
