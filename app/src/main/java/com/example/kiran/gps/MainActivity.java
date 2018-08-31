@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        locationService.onRequestPermissionsResult(requestCode, grantResults);
     }
 
     void updateWeather(String city) {

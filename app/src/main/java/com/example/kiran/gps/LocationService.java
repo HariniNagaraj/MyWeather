@@ -51,7 +51,7 @@ class LocationService implements LocationListener {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void onRequestPermissionsResult(int MY_PERMISSIONS_ACCESS_FINE_LOCATION, String[] PERMISSIONS_GPS, int[] grantResults) {
+    public void onRequestPermissionsResult(int MY_PERMISSIONS_ACCESS_FINE_LOCATION, int[] grantResults) {
         switch (MY_PERMISSIONS_ACCESS_FINE_LOCATION) {
             case 1: {
                 if ((grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
