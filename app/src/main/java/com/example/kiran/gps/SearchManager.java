@@ -1,5 +1,6 @@
 package com.example.kiran.gps;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -8,14 +9,23 @@ import android.widget.SearchView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SearchManager {
 
     private final List<String> citiesList = new ArrayList<>();
+    @BindView(R.id.citiesSuggestionsList)
+    ListView citiesSuggestionsList;
+    @BindView(R.id.citiesSearchView)
+    SearchView citiesSearchView;
     private ListAdapter adapter;
     private SearchManagerDelegate delegate;
 
-    SearchManager(SearchManagerDelegate delegate) {
+    SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
+        ButterKnife.bind(activity);
+        setupSearchBar();
     }
 
     private void setupSearchBar(SearchView searchView) {
@@ -77,9 +87,19 @@ public class SearchManager {
         citiesList.add("Hyderabad");
     }
 
-    void setupSearchBar(SearchView citiesSearchView, ListView citiesSuggestionsList) {
+    private void setupSearchBar() {
         setupSearchBar(citiesSearchView);
         setUpAdapterForSearchBar(citiesSuggestionsList);
         setupOnQueryTextListener(citiesSearchView, citiesSuggestionsList);
+    }
+
+    public void minimize() {
+        citiesSearchView.clearFocus();
+        citiesSuggestionsList.setVisibility(View.INVISIBLE);
+        citiesSearchView.setIconified(true);
+    }
+
+    public boolean isExpanded() {
+        return !citiesSearchView.isIconified();
     }
 }

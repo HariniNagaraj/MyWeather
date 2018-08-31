@@ -6,9 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -38,12 +36,9 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
     TextView air;
     @BindView(R.id.humidity)
     TextView humid;
-    @BindView(R.id.list_view)
-    ListView listView;
     @BindView(R.id.navList)
     ListView mDrawerList;
-    @BindView(R.id.searchBar)
-    SearchView searchBar;
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -51,9 +46,8 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        searchManager = new SearchManager(this);
+        searchManager = new SearchManager(this, this);
         drawerManager.showDrawerItems(mDrawerList,this);
-        searchManager.setupSearchBar(this.searchBar, this.listView);
         setupInitialUI();
         initScreenRefresh();
         locationService = new LocationService(this, this);
@@ -79,10 +73,8 @@ public class MainActivity extends AppCompatActivity implements LocationServiceDe
 
     @Override
     public void onBackPressed() {
-        if (!searchBar.isIconified()) {
-            searchBar.clearFocus();
-            listView.setVisibility(View.INVISIBLE);
-            searchBar.setIconified(true);
+        if (searchManager.isExpanded()) {
+            searchManager.minimize();
             return;
         }
         super.onBackPressed();

@@ -18,7 +18,7 @@
             tools:context=".MainActivity">
 
             <SearchView
-                android:id="@+id/searchBar"
+                android:id="@+id/citiesSearchView"
                 android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="85dp"
-                android:fontFamily="sans-serif-light"
+                app:fontFamily="sans-serif-light"
                 android:hint="date"
                 android:text=""
                 android:textColor="@android:color/white"
@@ -47,7 +47,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="131dp"
-                android:fontFamily="sans-serif-thin"
+                app:fontFamily="sans-serif-thin"
                 android:gravity="center"
                 android:hint="Celsius"
                 android:text=""
@@ -92,7 +92,6 @@
                     android:id="@+id/imageView2"
                     android:layout_width="45dp"
                     android:layout_height="39dp"
-                    android:layout_alignTop="@+id/humidity"
                     android:layout_marginLeft="25dp"
                     app:srcCompat="@drawable/wind_speed_icon"
                     android:layout_marginStart="25dp" />
@@ -101,7 +100,6 @@
                     android:id="@+id/wind"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_alignTop="@+id/humidity"
                     android:layout_marginLeft="0dp"
                     android:layout_marginTop="7dp"
                     android:hint="wind"
@@ -147,12 +145,12 @@
             </RelativeLayout>
 
             <ListView
-                android:id="@+id/list_view"
+                android:id="@+id/citiesSuggestionsList"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/searchBar"
+                android:layout_below="@+id/citiesSearchView"
                 android:background="#A6569D"
                 android:visibility="gone" />
 
@@ -163,7 +161,7 @@
         android:id="@+id/navList"
         android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
+        android:layout_gravity="start"
         android:background="#ffeeeeee" />
 
 </android.support.v4.widget.DrawerLayout>
