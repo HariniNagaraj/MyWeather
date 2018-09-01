@@ -17,8 +17,8 @@ public class SearchManager {
     ListView citiesSuggestionsList;
     @BindView(R.id.citiesSearchView)
     SearchView citiesSearchView;
-    private ListAdapter adapter;
     private final SearchManagerDelegate delegate;
+    private ListAdapter adapter;
 
     SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
@@ -35,16 +35,16 @@ public class SearchManager {
         setupCityList();
     }
 
-    private void setUpAdapterForSearchBar(final ListView listView) {
+    private void setUpAdapterForSearchBar(final ListView citiesSuggestionsList) {
         adapter = new ListAdapter(citiesList);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        citiesSuggestionsList.setAdapter(adapter);
+        citiesSuggestionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                listView.setVisibility(View.GONE);
+                citiesSuggestionsList.setVisibility(View.GONE);
                 String city = adapter.filteredData.get(position);
-                delegate.getCityForNaVBar(city);
-                delegate.cityChanged(city);
+                delegate.getCityForDrawer(city);
+                delegate.cityChangedFromSearchBar(city);
             }
         });
     }
@@ -94,8 +94,8 @@ public class SearchManager {
 
     public void minimize() {
         citiesSearchView.clearFocus();
-        citiesSuggestionsList.setVisibility(View.INVISIBLE);
         citiesSearchView.setIconified(true);
+        citiesSuggestionsList.setVisibility(View.GONE);
     }
 
     public boolean isExpanded() {
@@ -103,8 +103,8 @@ public class SearchManager {
     }
 
     interface SearchManagerDelegate {
-        void cityChanged(String city);
+        void cityChangedFromSearchBar(String city);
 
-        void getCityForNaVBar(String city);
+        void getCityForDrawer(String city);
     }
 }

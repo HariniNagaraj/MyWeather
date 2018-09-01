@@ -1,7 +1,5 @@
 package com.example.kiran.gps;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,10 +17,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
-    private SearchManager searchManager;
     private final DrawerManager drawerManager = new DrawerManager(this);
     private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
+    private SearchManager searchManager;
 
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupInitialUI();
+        setupCurrentDate();
         initScreenRefresh();
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
@@ -57,8 +55,11 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         setupLocationServices();
     }
 
-    private void setupInitialUI() {
-        showCurrentDate();
+    private void setupCurrentDate() {
+        Date currentDate = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
+        String formattedDate = simpleDateFormat.format(currentDate);
+        date.setText(formattedDate);
     }
 
     private void setupLocationServices() {
@@ -98,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     void updateWeather(String city) {
-        weatherService.findWeather(city, new WeatherService.MyCallBack() {
+        weatherService.findWeather(city, new WeatherService.updateWeatherData() {
             @Override
-            public void updateMyText(String city, String temperature, String wind, String humidity) {
-                updateUI(city, temperature, wind, humidity);
+            public void updateWeatherData(String cityName, String currentTemperature, String windSpeed, String humidityLevel) {
+                updateUI(cityName, currentTemperature, windSpeed, humidityLevel);
             }
         });
     }
@@ -114,19 +115,12 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     private void updateWeather(double latitude, double longitude) {
-        weatherService.findWeather(latitude, longitude, new WeatherService.MyCallBack() {
+        weatherService.findWeather(latitude, longitude, new WeatherService.updateWeatherData() {
             @Override
-            public void updateMyText(String city, String temperature, String wind, String humidity) {
-                updateUI(city, temperature, wind, humidity);
+            public void updateWeatherData(String cityName, String currentTemperature, String windSpeed, String humidityLevel) {
+                updateUI(cityName, currentTemperature, windSpeed, humidityLevel);
             }
         });
-    }
-
-    private void showCurrentDate() {
-        Date day = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
-        String formattedDate = simpleDateFormat.format(day);
-        date.setText(formattedDate);
     }
 
     @Override
@@ -135,12 +129,12 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     @Override
-    public void cityChanged(String city) {
+    public void cityChangedFromSearchBar(String city) {
         updateWeather(city);
     }
 
     @Override
-    public void getCityForNaVBar(String city) {
+    public void getCityForDrawer(String city) {
         drawerManager.showDrawerItems(mDrawerList, this, city);
     }
 }
