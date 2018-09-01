@@ -22,7 +22,7 @@ class WeatherService {
         this.context = context;
     }
 
-    void findWeather(String city, final MyCallBack callBack) {
+    void findWeather(String city, final updateWeatherData mainActivityCallBack) {
         String url = "https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase();
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -35,7 +35,7 @@ class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    callBack.updateMyText(city, temperature, wind, humidity);
+                    mainActivityCallBack.updateWeatherData(city, temperature, wind, humidity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -55,7 +55,7 @@ class WeatherService {
         queue.add(jor);
     }
 
-    void findWeather(double latitude, double longitude, final MyCallBack callBack) {
+    void findWeather(double latitude, double longitude, final updateWeatherData mainActivityCallBack) {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -68,7 +68,7 @@ class WeatherService {
                     String city = response.getString("name");
                     String wind = String.valueOf(main_object2.getInt("speed") * 3.6 + " kph");
                     String humidity = String.valueOf(main_object.getInt("humidity") + "%");
-                    callBack.updateMyText(city, temperature, wind, humidity);
+                    mainActivityCallBack.updateWeatherData(city, temperature, wind, humidity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -88,7 +88,7 @@ class WeatherService {
         queue.add(jor);
     }
 
-    public interface MyCallBack {
-        void updateMyText(String city, String temperature, String wind, String humidity);
+    interface updateWeatherData {
+        void updateWeatherData(String cityName, String currentTemperature, String windSpeed, String humidityLevel);
     }
 }
