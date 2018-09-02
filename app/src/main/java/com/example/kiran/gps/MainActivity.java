@@ -18,22 +18,14 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
     private final DrawerManager drawerManager = new DrawerManager(this);
-    private final WeatherService weatherService = new WeatherService(this);
     private LocationService locationService;
     private SearchManager searchManager;
+    private WeatherService weatherService;
 
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
-    @BindView(R.id.city)
-    TextView place;
     @BindView(R.id.day)
     TextView date;
-    @BindView(R.id.celcius)
-    TextView temp;
-    @BindView(R.id.wind)
-    TextView air;
-    @BindView(R.id.humidity)
-    TextView humid;
     @BindView(R.id.navList)
     ListView mDrawerList;
 
@@ -45,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         ButterKnife.bind(this);
         setupCurrentDate();
         initScreenRefresh();
+        weatherService = new WeatherService(this,this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
     }
@@ -99,28 +92,11 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     void updateWeather(String city) {
-        weatherService.findWeather(city, new WeatherService.updateWeatherData() {
-            @Override
-            public void updateWeatherData(String cityName, String currentTemperature, String windSpeed, String humidityLevel) {
-                updateUI(cityName, currentTemperature, windSpeed, humidityLevel);
-            }
-        });
-    }
-
-    private void updateUI(String city, String temperature, String wind, String humidity) {
-        place.setText(city);
-        humid.setText(humidity);
-        air.setText(wind);
-        temp.setText(temperature);
+        weatherService.findWeather(city);
     }
 
     private void updateWeather(double latitude, double longitude) {
-        weatherService.findWeather(latitude, longitude, new WeatherService.updateWeatherData() {
-            @Override
-            public void updateWeatherData(String cityName, String currentTemperature, String windSpeed, String humidityLevel) {
-                updateUI(cityName, currentTemperature, windSpeed, humidityLevel);
-            }
-        });
+        weatherService.findWeather(latitude, longitude);
     }
 
     @Override
