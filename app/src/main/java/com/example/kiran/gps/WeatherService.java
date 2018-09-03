@@ -2,8 +2,6 @@ package com.example.kiran.gps;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +21,7 @@ import butterknife.ButterKnife;
 
 class WeatherService {
 
-    private final Context context;
-
+    public static final double WIND_SPEED = 3.6;
     @BindView(R.id.city)
     TextView place;
     @BindView(R.id.celcius)
@@ -34,6 +31,8 @@ class WeatherService {
     @BindView(R.id.humidity)
     TextView humid;
 
+    private final Context context;
+
     public WeatherService(Context context, Activity activity) {
         this.context = context;
         ButterKnife.bind(this, activity);
@@ -41,7 +40,6 @@ class WeatherService {
 
     private void parseJsonAndUpdateWeather(String url) {
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(JSONObject response) {
                 parseJsonData(response);
@@ -49,30 +47,38 @@ class WeatherService {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                NetworkResponse networkResponse = error.networkResponse;
-                if (networkResponse != null && networkResponse.data != null) {
-                    String jsonError = new String(networkResponse.data);
-                    Toast.makeText(context, jsonError,
-                            Toast.LENGTH_LONG).show();
-                }
+                errorResponse(error);
             }
         });
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(jor);
     }
 
+    private void errorResponse(VolleyError error) {
+        NetworkResponse networkResponse = error.networkResponse;
+        if (networkResponse != null && networkResponse.data != null) {
+            String jsonError = networkResponse.data.toString();
+            Toast.makeText(context, jsonError,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void parseJsonData(JSONObject response) {
         try {
-            JSONObject mainobject = response.getJSONObject("main");
-            JSONObject mainobjectWind = response.getJSONObject("wind");
-            String temperature = String.valueOf(mainobject.getInt("temp"));
-            String city = response.getString("name");
-            String wind = String.valueOf(mainobjectWind.getInt("speed") * 3.6 + " kph");
-            String humidity = String.valueOf(mainobject.getInt("humidity") + "%");
-            updateWeather(temperature, city, wind, humidity);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            parseJsonFromResponse(response);
+        } catch (JSONException exception) {
+            exception.printStackTrace();
         }
+    }
+
+    private void parseJsonFromResponse(JSONObject response) throws JSONException {
+        JSONObject mainobject = response.getJSONObject("main");
+        JSONObject mainobjectWind = response.getJSONObject("wind");
+        String temperature = String.valueOf(mainobject.getInt("temp"));
+        String city = response.getString("name");
+        String wind = String.valueOf(mainobjectWind.getInt("speed") * WIND_SPEED + " kph");
+        String humidity = String.valueOf(mainobject.getInt("humidity") + "%");
+        updateWeather(temperature, city, wind, humidity);
     }
 
     private void updateWeather(String temperature, String city, String wind, String humidity) {

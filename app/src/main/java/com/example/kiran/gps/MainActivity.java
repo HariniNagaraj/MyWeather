@@ -6,28 +6,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
-    private final DrawerManager drawerManager = new DrawerManager(this);
-    private LocationService locationService;
-    private SearchManager searchManager;
-    private WeatherService weatherService;
-
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.day)
     TextView date;
-    @BindView(R.id.navList)
-    ListView mDrawerList;
+
+    private DrawerManager drawerManager;
+    private LocationService locationService;
+    private SearchManager searchManager;
+    private WeatherService weatherService;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -37,22 +36,27 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         ButterKnife.bind(this);
         setupCurrentDate();
         initScreenRefresh();
+        objectReferences();
+    }
+
+    private void objectReferences() {
         weatherService = new WeatherService(this,this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
+        drawerManager = new DrawerManager(this,this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setupLocationServices();
-        drawerManager.showDrawerItems(mDrawerList,this);
+        drawerManager.showDrawerItems(this);
     }
 
     private void setupCurrentDate() {
         Date currentDate = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
-        String formattedDate = simpleDateFormat.format(currentDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault());
+        String formattedDate = dateFormat.format(currentDate);
         date.setText(formattedDate);
     }
 
@@ -78,12 +82,16 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                locationService.showGpsSettingDialogIfRequired();
-                locationService.fetchLocation();
-                updateWeather(locationService.latitude, locationService.longitude);
-                pullToRefresh.setRefreshing(false);
+                initOnRefresh();
             }
         });
+    }
+
+    private void initOnRefresh() {
+        locationService.showGpsSettingDialogIfRequired();
+        locationService.fetchLocation();
+        updateWeather(locationService.latitude, locationService.longitude);
+        pullToRefresh.setRefreshing(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

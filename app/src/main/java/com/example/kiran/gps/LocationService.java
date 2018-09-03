@@ -22,8 +22,9 @@ import java.util.Objects;
 
 class LocationService implements LocationListener {
 
+    public static final int MIN_TIME = 1000;
     double latitude;
-   double longitude;
+    double longitude;
     private final MainActivity mainActivity;
     private final LocationServiceDelegate delegate;
     private final LocationManager locationManager;
@@ -36,7 +37,7 @@ class LocationService implements LocationListener {
 
     @SuppressLint("MissingPermission")
     void fetchLocation() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
     }
 
     boolean requestReadLocationPermissionIfRequired() {
@@ -54,7 +55,7 @@ class LocationService implements LocationListener {
     public void onRequestPermissionsResult(int requestCode, int[] grantResults) {
         switch (requestCode) {
             case 1: {
-                if ((grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(mainActivity, "Permission granted!", Toast.LENGTH_SHORT).show();
                     if (showGpsSettingDialogIfRequired()) {
                         fetchLocation();

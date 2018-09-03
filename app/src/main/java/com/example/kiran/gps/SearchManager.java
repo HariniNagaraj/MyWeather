@@ -14,11 +14,11 @@ import butterknife.ButterKnife;
 
 public class SearchManager {
 
-    private final List<String> citiesList = new ArrayList<>();
     @BindView(R.id.citiesSuggestionsList)
     ListView citiesSuggestionsList;
     @BindView(R.id.citiesSearchView)
     SearchView citiesSearchView;
+    private final List<String> citiesList = new ArrayList<>();
     private final SearchManagerDelegate delegate;
     private ListAdapter adapter;
 
@@ -37,7 +37,7 @@ public class SearchManager {
         setupCityList();
     }
 
-    private void setUpAdapterForSearchBar(final ListView listView) {
+    private void setUpAdapterForSearchBar() {
         adapter = new ListAdapter(citiesList);
         citiesSuggestionsList.setAdapter(adapter);
         citiesSuggestionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,6 +66,10 @@ public class SearchManager {
                 return true;
             }
         });
+        searchBarTextListener(searchView, listView);
+    }
+
+    private void searchBarTextListener(SearchView searchView, final ListView listView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -90,7 +94,7 @@ public class SearchManager {
 
     private void setupSearchBar() {
         setupSearchBarIcon();
-        setUpAdapterForSearchBar(citiesSuggestionsList);
+        setUpAdapterForSearchBar();
         setupOnQueryTextListener(citiesSearchView, citiesSuggestionsList);
     }
 
