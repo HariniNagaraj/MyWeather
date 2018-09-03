@@ -1,28 +1,36 @@
 package com.example.kiran.gps;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
+import java.util.List;
 
 class DrawerManager {
 
-    SharedPreferenceCallBack getCity;
-    private final ArrayList<String> addCityToDrawer = new ArrayList<>();
+    private static final String filename = "cities";
+    private List<String> cities = new ArrayList<>();
     private final Context context;
-    public DrawerManager(Context context,SharedPreferenceCallBack getCity) {
-        this.getCity=getCity;
-        this.context=context;
+
+    public DrawerManager(Context context) {
+        this.context = context;
     }
 
-    void showDrawerItems(ListView drawerListView, final MainActivity mainActivity, String city) {
-             if(!isCityAdded(city)){
-            addCityToDrawer.add(city);
-        }
-        getCity.getCityForSharedPre(city);
-        final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, addCityToDrawer);
+    void showDrawerItems(ListView drawerListView, final MainActivity mainActivity) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        String citiesJson = sharedPreferences.getString(filename, "[]");
+        Gson gson = new Gson();
+        List<String> cities = gson.fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
+        }.getType());
+        this.cities = cities;
+        final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, cities);
         drawerListView.setAdapter(drawerAdapter);
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -33,11 +41,17 @@ class DrawerManager {
         });
     }
 
-    private boolean isCityAdded(String city){
-        return addCityToDrawer.contains(city);
+    private boolean isCityAdded(String city) {
+        return cities.contains(city);
     }
-}
 
-interface SharedPreferenceCallBack{
-    void getCityForSharedPre(String city);
+    public void addCity(String city) {
+        if (isCityAdded(city)) return;
+        cities.add(city);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String citiesJson = new Gson().toJson(cities);
+        editor.putString(filename, citiesJson);
+        editor.apply();
+    }
 }

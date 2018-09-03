@@ -17,14 +17,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
+
 import java.util.Objects;
 
 class LocationService implements LocationListener {
 
+    double latitude;
+   double longitude;
     private final MainActivity mainActivity;
     private final LocationServiceDelegate delegate;
     private final LocationManager locationManager;
-    protected double latitude, longitude;
 
     LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {
         this.mainActivity = mainActivity;
@@ -53,9 +55,8 @@ class LocationService implements LocationListener {
         switch (requestCode) {
             case 1: {
                 if ((grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    //If user presses allow
                     Toast.makeText(mainActivity, "Permission granted!", Toast.LENGTH_SHORT).show();
-                    if (showGPSSettingDialogIfRequired()) {
+                    if (showGpsSettingDialogIfRequired()) {
                         fetchLocation();
                     }
                 } else {
@@ -66,17 +67,17 @@ class LocationService implements LocationListener {
         }
     }
 
-    boolean showGPSSettingDialogIfRequired() {
+    boolean showGpsSettingDialogIfRequired() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (!isGpsEnabled()) {
-                showGPSSettingsDialog();
+                showGpsSettingsDialog();
                 return false;
             }
         }
         return true;
     }
 
-    private void showGPSSettingsDialog() {
+    private void showGpsSettingsDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mainActivity);
         alertDialog.setTitle("Location Settings");
         alertDialog.setMessage("Permission Granted, Please Enable GPS in Settings.");
