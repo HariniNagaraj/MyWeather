@@ -43,12 +43,16 @@ public class SearchManager {
         citiesSuggestionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                citiesSuggestionsList.setVisibility(View.GONE);
-                String city = adapter.filteredData.get(position);
-                delegate.addCityToDrawer(city);
-                delegate.cityChangedFromSearchBar(city);
+                onCitySelected(position);
             }
         });
+    }
+
+    private void onCitySelected(int position) {
+        citiesSuggestionsList.setVisibility(View.GONE);
+        String city = adapter.filteredData.get(position);
+        delegate.addCityToDrawer(city);
+        delegate.cityChangedFromSearchBar(city);
     }
 
     private void setupOnQueryTextListener(final SearchView searchView, final ListView listView) {
@@ -58,7 +62,11 @@ public class SearchManager {
                 searchView.setVisibility(View.VISIBLE);
             }
         });
+        searchBarOnCloseListener(searchView, listView);
+        searchBarTextListener(searchView, listView);
+    }
 
+    private void searchBarOnCloseListener(SearchView searchView, final ListView listView) {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -66,7 +74,6 @@ public class SearchManager {
                 return true;
             }
         });
-        searchBarTextListener(searchView, listView);
     }
 
     private void searchBarTextListener(SearchView searchView, final ListView listView) {

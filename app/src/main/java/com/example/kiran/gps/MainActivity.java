@@ -1,5 +1,6 @@
 package com.example.kiran.gps;
 
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     private void objectReferences() {
-        weatherService = new WeatherService(this,this);
+        weatherService = new WeatherService(this, this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
-        drawerManager = new DrawerManager(this,this);
+        drawerManager = new DrawerManager(this, this);
     }
 
     @Override
@@ -82,15 +83,15 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initOnRefresh();
+                onUserRefresh();
             }
         });
     }
 
-    private void initOnRefresh() {
+    private void onUserRefresh() {
         locationService.showGpsSettingDialogIfRequired();
         locationService.fetchLocation();
-        updateWeather(locationService.latitude, locationService.longitude);
+        updateWeather(locationService.location);
         pullToRefresh.setRefreshing(false);
     }
 
@@ -104,13 +105,13 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         weatherService.findWeather(city);
     }
 
-    private void updateWeather(double latitude, double longitude) {
-        weatherService.findWeather(latitude, longitude);
+    private void updateWeather(Location location) {
+        weatherService.findWeather(location);
     }
 
     @Override
-    public void locationUpdated() {
-        updateWeather(locationService.latitude, locationService.longitude);
+    public void locationUpdated(Location location) {
+        updateWeather(location);
     }
 
     @Override

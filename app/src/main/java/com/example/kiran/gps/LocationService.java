@@ -23,8 +23,7 @@ import java.util.Objects;
 class LocationService implements LocationListener {
 
     public static final int MIN_TIME = 1000;
-    double latitude;
-    double longitude;
+    public Location location;
     private final MainActivity mainActivity;
     private final LocationServiceDelegate delegate;
     private final LocationManager locationManager;
@@ -53,18 +52,13 @@ class LocationService implements LocationListener {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onRequestPermissionsResult(int requestCode, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(mainActivity, "Permission granted!", Toast.LENGTH_SHORT).show();
-                    if (showGpsSettingDialogIfRequired()) {
-                        fetchLocation();
-                    }
-                } else {
-                    Toast.makeText(mainActivity, "Permission denied", Toast.LENGTH_SHORT).show();
-                }
-                break;
+        if (requestCode == 1) {
+            String status = "denied";
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                status = "granted";
+                if (showGpsSettingDialogIfRequired()) fetchLocation();
             }
+            Toast.makeText(mainActivity, "Permission " + status, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -82,6 +76,11 @@ class LocationService implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mainActivity);
         alertDialog.setTitle("Location Settings");
         alertDialog.setMessage("Permission Granted, Please Enable GPS in Settings.");
+        initGpsSettingsDialogActions(alertDialog);
+        alertDialog.show();
+    }
+
+    private void initGpsSettingsDialogActions(AlertDialog.Builder alertDialog) {
         alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 mainActivity.setIntent(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -93,7 +92,6 @@ class LocationService implements LocationListener {
                 dialog.cancel();
             }
         });
-        alertDialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -103,13 +101,12 @@ class LocationService implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+    public void onLocationChanged(final Location location) {
+        this.location = location;
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                delegate.locationUpdated();
+                delegate.locationUpdated(location);
             }
         });
         locationManager.removeUpdates(this);
@@ -131,6 +128,6 @@ class LocationService implements LocationListener {
     }
 
     interface LocationServiceDelegate {
-        void locationUpdated();
+        void locationUpdated(Location location);
     }
 }

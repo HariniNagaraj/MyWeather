@@ -19,16 +19,15 @@ import butterknife.ButterKnife;
 
 class DrawerManager {
 
+    private static final String FILENAME = "cities";
+    private final Context context;
     @BindView(R.id.navList)
     ListView mDrawerList;
-
-    private static final String FILENAME = "cities";
     private List<String> cities = new ArrayList<>();
-    private final Context context;
 
-    public DrawerManager(Activity activity,Context context) {
+    public DrawerManager(Activity activity, Context context) {
         this.context = context;
-        ButterKnife.bind(this,activity);
+        ButterKnife.bind(this, activity);
     }
 
     void showDrawerItems(final MainActivity mainActivity) {

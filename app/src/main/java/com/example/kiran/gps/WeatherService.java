@@ -2,6 +2,7 @@ package com.example.kiran.gps;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,8 +89,8 @@ class WeatherService {
         humid.setText(humidity);
     }
 
-    void findWeather(double latitude, double longitude) {
-        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
+    void findWeather(Location location) {
+        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
         parseJsonAndUpdateWeather(url);
     }
 
