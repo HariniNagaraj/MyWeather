@@ -1,14 +1,11 @@
 package com.example.kiran.gps;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
@@ -18,10 +15,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, SharedPreferenceCallBack {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
-    private final DrawerManager drawerManager = new DrawerManager(this,this);
-    private SharedPreferences sharedPreferences ;
+    private final DrawerManager drawerManager = new DrawerManager(this);
     private LocationService locationService;
     private SearchManager searchManager;
     private WeatherService weatherService;
@@ -41,18 +37,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         ButterKnife.bind(this);
         setupCurrentDate();
         initScreenRefresh();
-        sharedPreferences = getSharedPreferences("savedCities", Context.MODE_PRIVATE);
         weatherService = new WeatherService(this,this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
-    }
-
-    private void saveCityFromSharedPreferences(String city) {
-        SharedPreferences.Editor saveCityToDisk=sharedPreferences.edit();
-        saveCityToDisk.putString("savedCities",city);
-        saveCityToDisk.commit();
-        String getCityFromDisk=sharedPreferences.getString("savedCities",null);
-        Log.d("check",getCityFromDisk);
     }
 
     @Override
@@ -125,11 +112,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public void getCityForDrawer(String city) {
         drawerManager.showDrawerItems(mDrawerList, this, city);
-    }
-
-    @Override
-    public void getCityForSharedPre(String city) {
-        saveCityFromSharedPreferences(city);
     }
 }
 
