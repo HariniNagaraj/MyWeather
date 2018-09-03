@@ -3,6 +3,7 @@ package com.example.kiran.gps;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,19 +41,24 @@ class WeatherService {
     }
 
     private void parseJsonAndUpdateWeather(String url) {
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                parseJsonData(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorResponse(error);
-            }
-        });
+        JsonObjectRequest jor = getJsonObjectRequest(url);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(jor);
+    }
+
+    @NonNull
+    private JsonObjectRequest getJsonObjectRequest(String url) {
+        return new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    parseJsonData(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    errorResponse(error);
+                }
+            });
     }
 
     private void errorResponse(VolleyError error) {

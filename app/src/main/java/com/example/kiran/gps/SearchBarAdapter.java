@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class ListAdapter extends BaseAdapter implements Filterable {
+class SearchBarAdapter extends BaseAdapter implements Filterable {
 
     List<String> filteredData;
     private final List<String> mStringFilterList;
     private ValueFilter valueFilter;
     private LayoutInflater inflater;
 
-    ListAdapter(List<String> canceltype) {
+    SearchBarAdapter(List<String> canceltype) {
         filteredData = canceltype;
         mStringFilterList = canceltype;
     }
@@ -72,11 +72,7 @@ class ListAdapter extends BaseAdapter implements Filterable {
             FilterResults results = new FilterResults();
             if (constraint != null && constraint.length() > 0) {
                 List<String> filterList = new ArrayList<>();
-                for (int i = 0; i < mStringFilterList.size(); i++) {
-                    if ((mStringFilterList.get(i).toUpperCase()).contains(constraint.toString().toUpperCase())) {
-                        filterList.add(mStringFilterList.get(i));
-                    }
-                }
+                searchBarFilterIteration(constraint, filterList);
                 results.count = filterList.size();
                 results.values = filterList;
             } else {
@@ -91,6 +87,14 @@ class ListAdapter extends BaseAdapter implements Filterable {
                                       FilterResults results) {
             filteredData = (List<String>) results.values;
             notifyDataSetChanged();
+        }
+    }
+
+    private void searchBarFilterIteration(CharSequence constraint, List<String> filterList) {
+        for (int i = 0; i < mStringFilterList.size(); i++) {
+            if ((mStringFilterList.get(i).toUpperCase()).contains(constraint.toString().toUpperCase())) {
+                filterList.add(mStringFilterList.get(i));
+            }
         }
     }
 }

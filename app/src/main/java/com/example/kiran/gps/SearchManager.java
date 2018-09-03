@@ -20,7 +20,7 @@ public class SearchManager {
     SearchView citiesSearchView;
     private final List<String> citiesList = new ArrayList<>();
     private final SearchManagerDelegate delegate;
-    private ListAdapter adapter;
+    private SearchBarAdapter adapter;
 
     SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
@@ -38,7 +38,7 @@ public class SearchManager {
     }
 
     private void setUpAdapterForSearchBar() {
-        adapter = new ListAdapter(citiesList);
+        adapter = new SearchBarAdapter(citiesList);
         citiesSuggestionsList.setAdapter(adapter);
         citiesSuggestionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

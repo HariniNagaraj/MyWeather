@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 class DrawerManager {
 
     private static final String FILENAME = "cities";
-    private final Context context;
     @BindView(R.id.navList)
     ListView mDrawerList;
     private List<String> cities = new ArrayList<>();
+    private final Context context;
 
     public DrawerManager(Activity activity, Context context) {
         this.context = context;
