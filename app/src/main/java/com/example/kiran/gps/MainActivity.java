@@ -1,5 +1,6 @@
 package com.example.kiran.gps;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,11 +8,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -19,11 +30,11 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
 
+    private static final int RC_SIGN_IN = 123;
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.day)
     TextView date;
-
     private DrawerManager drawerManager;
     private LocationService locationService;
     private SearchManager searchManager;
@@ -40,6 +51,32 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         objectReferences();
     }
 
+    public void createSignInIntent() {
+        List<AuthUI.IdpConfig> googleSignin = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignin).build(), RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                // ...
+            }
+        }
+    }
+
     private void objectReferences() {
         weatherService = new WeatherService(this, this);
         locationService = new LocationService(this, this);
@@ -51,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     protected void onResume() {
         super.onResume();
         setupLocationServices();
-        drawerManager.showDrawerItems(this);
+        drawerManager.showDrawerItems(this,"Login");
     }
 
     private void setupCurrentDate() {
@@ -95,6 +132,17 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         pullToRefresh.setRefreshing(false);
     }
 
+    public  void signOut(){
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -124,7 +172,3 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         drawerManager.addCity(city);
     }
 }
-
-
-
-

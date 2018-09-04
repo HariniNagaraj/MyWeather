@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,15 +32,22 @@ class DrawerManager {
         ButterKnife.bind(this, activity);
     }
 
-    void showDrawerItems(final MainActivity mainActivity) {
+    void showDrawerItems(final MainActivity mainActivity,String user) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
         String citiesJson = sharedPreferences.getString(FILENAME, "[]");
         Gson gson = new Gson();
         List<String> cities = gson.fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
         }.getType());
         this.cities = cities;
+        loginChecker(user);
         final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, cities);
         drawerListViewListener(mDrawerList, mainActivity, drawerAdapter);
+    }
+
+    private void loginChecker(String user) {
+        if(cities.contains("Login")){
+            cities.add(0,"Logout");
+        }
     }
 
     private void drawerListViewListener(ListView drawerListView, final MainActivity mainActivity, final ArrayAdapter<String> drawerAdapter) {
@@ -47,6 +56,13 @@ class DrawerManager {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                 String city = drawerAdapter.getItem(position);
+                if(city.equals("Login")){
+                    mainActivity.createSignInIntent();
+                    showDrawerItems(mainActivity,"Logout");
+                }else if(city.equals("Logout")){
+                    mainActivity.signOut();
+                    showDrawerItems(mainActivity,"Login");
+                }
                 mainActivity.updateWeather(city);
             }
         });
