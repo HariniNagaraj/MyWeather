@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
     @Override
     public void createSignInIntent() {
-        List<AuthUI.IdpConfig> googleSignin = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignin).build(), RC_SIGN_IN);
+        List<AuthUI.IdpConfig> googleSignIn = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignIn).build(), RC_SIGN_IN);
     }
 
     @Override
     public void signOut() {
         AuthUI.getInstance()
-                .delete(this)
+                .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
