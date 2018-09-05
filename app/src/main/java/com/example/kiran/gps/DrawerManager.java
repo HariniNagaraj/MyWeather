@@ -3,6 +3,8 @@ package com.example.kiran.gps;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,50 +25,59 @@ import butterknife.ButterKnife;
 class DrawerManager {
 
     private static final String FILENAME = "cities";
+    private final String logout = "Logout";
+    private final Context context;
     @BindView(R.id.navList)
     ListView mDrawerList;
     private List<String> cities = new ArrayList<>();
-    private final Context context;
 
     public DrawerManager(Activity activity, Context context) {
         this.context = context;
         ButterKnife.bind(this, activity);
     }
 
-    void showDrawerItems(final MainActivity mainActivity,String user) {
+    void showDrawerItems(final MainActivity mainActivity, String user) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
         String citiesJson = sharedPreferences.getString(FILENAME, "[]");
         Gson gson = new Gson();
         List<String> cities = gson.fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
         }.getType());
         this.cities = cities;
-        loginChecker(user);
+        checkUserStatus(user);
         final ArrayAdapter<String> drawerAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, cities);
         drawerListViewListener(mDrawerList, mainActivity, drawerAdapter);
     }
 
-    private void loginChecker(String user) {
-        if(cities.contains("Login")){
-            cities.add(0,"Logout");
+    private void checkUserStatus(String user) {
+        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+        if (userId == null) {
+            cities.add(0, user);
+        } else {
+            if (!cities.contains(logout))
+                cities.add(0, logout);
         }
     }
 
     private void drawerListViewListener(ListView drawerListView, final MainActivity mainActivity, final ArrayAdapter<String> drawerAdapter) {
         drawerListView.setAdapter(drawerAdapter);
         drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                 String city = drawerAdapter.getItem(position);
-                if(city.equals("Login")){
-                    mainActivity.createSignInIntent();
-                    showDrawerItems(mainActivity,"Logout");
-                }else if(city.equals("Logout")){
-                    mainActivity.signOut();
-                    showDrawerItems(mainActivity,"Login");
-                }
+                initIntent(mainActivity, Objects.requireNonNull(city));
                 mainActivity.updateWeather(city);
             }
         });
+    }
+
+    private void initIntent(MainActivity mainActivity, String drawerItem) {
+        if (drawerItem.equals("Login")) {
+            mainActivity.createSignInIntent();
+        } else if (drawerItem.equals(logout)) {
+            mainActivity.signOut();
+            showDrawerItems(mainActivity, "Login");
+        }
     }
 
     private boolean isCityAdded(String city) {
