@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // ...
+                        Toast.makeText(MainActivity.this, "You have been signed out!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Toast.makeText(MainActivity.this, "welcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 drawerManager.updateMenus(DrawerManager.LOGOUT);
                 // ...
             } else {
