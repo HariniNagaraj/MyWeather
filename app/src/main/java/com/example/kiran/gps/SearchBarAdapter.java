@@ -53,7 +53,7 @@ class SearchBarAdapter extends BaseAdapter implements Filterable {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @SuppressLint
-                ("ViewHolder") RowItemBinding rowItemBinding = DataBindingUtil.inflate(Objects.requireNonNull(inflater), R.layout.citieslist_item, parent, false);
+                ("ViewHolder") RowItemBinding rowItemBinding = DataBindingUtil.inflate(Objects.requireNonNull(inflater), R.layout.row_item, parent, false);
         rowItemBinding.stringName.setText(filteredData.get(position));
         return rowItemBinding.getRoot();
     }
