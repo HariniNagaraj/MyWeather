@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         ButterKnife.bind(this);
         setupCurrentDate();
         initScreenRefresh();
-        objectReferences();
+        initServices();
+        drawerManager.initDrawerMenu();
     }
 
     @Override
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+                drawerManager.updateMenus(DrawerManager.LOGOUT);
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     protected void onResume() {
         super.onResume();
         setupLocationServices();
-        drawerManager.showDrawerItems("Login");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         locationService.onRequestPermissionsResult(requestCode, grantResults);
     }
 
-    private void objectReferences() {
+    private void initServices() {
         weatherService = new WeatherService(this, this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
