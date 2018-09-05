@@ -20,12 +20,22 @@ public class SearchManager {
     SearchView citiesSearchView;
     private final List<String> citiesList = new ArrayList<>();
     private final SearchManagerDelegate delegate;
-    private SearchBarAdapter adapter;
+    private SearchBarAdapter citiesSuggestionsListAdaptor;
 
     SearchManager(Activity activity, SearchManagerDelegate delegate) {
         this.delegate = delegate;
         ButterKnife.bind(this, activity);
         setupSearchBar();
+    }
+
+    public void minimize() {
+        citiesSearchView.clearFocus();
+        citiesSearchView.setIconified(true);
+        citiesSuggestionsList.setVisibility(View.GONE);
+    }
+
+    public boolean isExpanded() {
+        return !citiesSearchView.isIconified();
     }
 
     private void setupSearchBarIcon() {
@@ -38,8 +48,8 @@ public class SearchManager {
     }
 
     private void setUpAdapterForSearchBar() {
-        adapter = new SearchBarAdapter(citiesList);
-        citiesSuggestionsList.setAdapter(adapter);
+        citiesSuggestionsListAdaptor = new SearchBarAdapter(citiesList);
+        citiesSuggestionsList.setAdapter(citiesSuggestionsListAdaptor);
         citiesSuggestionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -50,34 +60,34 @@ public class SearchManager {
 
     private void onCitySelected(int position) {
         citiesSuggestionsList.setVisibility(View.GONE);
-        String city = adapter.filteredData.get(position);
+        String city = citiesSuggestionsListAdaptor.filteredData.get(position);
         delegate.addCityToDrawer(city);
         delegate.cityChangedFromSearchBar(city);
     }
 
-    private void setupOnQueryTextListener(final SearchView searchView, final ListView listView) {
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+    private void setupOnQueryTextListener() {
+        citiesSearchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchView.setVisibility(View.VISIBLE);
+                citiesSearchView.setVisibility(View.VISIBLE);
             }
         });
-        searchBarOnCloseListener(searchView, listView);
-        searchBarTextListener(searchView, listView);
+        searchBarOnCloseListener();
+        searchBarTextListener();
     }
 
-    private void searchBarOnCloseListener(SearchView searchView, final ListView listView) {
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+    private void searchBarOnCloseListener() {
+        citiesSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                listView.setVisibility(View.GONE);
+                citiesSuggestionsList.setVisibility(View.GONE);
                 return true;
             }
         });
     }
 
-    private void searchBarTextListener(SearchView searchView, final ListView listView) {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    private void searchBarTextListener() {
+        citiesSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -85,8 +95,8 @@ public class SearchManager {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                listView.setVisibility(View.VISIBLE);
-                adapter.getFilter().filter(newText);
+                citiesSuggestionsList.setVisibility(View.VISIBLE);
+                citiesSuggestionsListAdaptor.getFilter().filter(newText);
                 return false;
             }
         });
@@ -102,17 +112,7 @@ public class SearchManager {
     private void setupSearchBar() {
         setupSearchBarIcon();
         setUpAdapterForSearchBar();
-        setupOnQueryTextListener(citiesSearchView, citiesSuggestionsList);
-    }
-
-    public void minimize() {
-        citiesSearchView.clearFocus();
-        citiesSearchView.setIconified(true);
-        citiesSuggestionsList.setVisibility(View.GONE);
-    }
-
-    public boolean isExpanded() {
-        return !citiesSearchView.isIconified();
+        setupOnQueryTextListener();
     }
 
     interface SearchManagerDelegate {

@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 class WeatherService {
 
-    public static final double WIND_SPEED = 3.6;
+    private static final double WIND_SPEED = 3.6;
     @BindView(R.id.city)
     TextView place;
     @BindView(R.id.celcius)
@@ -35,30 +35,37 @@ class WeatherService {
 
     private final Context context;
 
-    public WeatherService(Context context, Activity activity) {
+    WeatherService(Context context, Activity activity) {
         this.context = context;
         ButterKnife.bind(this, activity);
     }
 
+    void findWeather(Location location) {
+        parseJsonAndUpdateWeather("https://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&appid=b3e236d068148443f565e441eacf0a84&units=metric");
+    }
+
+    void findWeather(String city) {
+        parseJsonAndUpdateWeather("https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase());
+    }
+
     private void parseJsonAndUpdateWeather(String url) {
-        JsonObjectRequest jor = getJsonObjectRequest(url);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(jor);
+        RequestQueue volleyQueue = Volley.newRequestQueue(context);
+        volleyQueue.add(getJsonObjectRequest(url));
     }
 
     @NonNull
     private JsonObjectRequest getJsonObjectRequest(String url) {
         return new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    parseJsonData(response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorResponse(error);
-                }
-            });
+            @Override
+            public void onResponse(JSONObject response) {
+                parseJsonData(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                errorResponse(error);
+            }
+        });
     }
 
     private void errorResponse(VolleyError error) {
@@ -79,29 +86,49 @@ class WeatherService {
     }
 
     private void parseJsonFromResponse(JSONObject response) throws JSONException {
-        JSONObject mainobject = response.getJSONObject("main");
-        JSONObject mainobjectWind = response.getJSONObject("wind");
-        String temperature = String.valueOf(mainobject.getInt("temp"));
+        JSONObject mainObject = response.getJSONObject("main");
+        JSONObject mainObjectWind = response.getJSONObject("wind");
+        String temperature = String.valueOf(mainObject.getInt("temp"));
         String city = response.getString("name");
-        String wind = String.valueOf(mainobjectWind.getInt("speed") * WIND_SPEED + " kph");
-        String humidity = String.valueOf(mainobject.getInt("humidity") + "%");
-        updateWeather(temperature, city, wind, humidity);
+        String wind = String.valueOf(mainObjectWind.getInt("speed") * WIND_SPEED + " kph");
+        String humidity = String.valueOf(mainObject.getInt("humidity") + "%");
+        updateWeather(new WeatherInfo(temperature, city, wind, humidity));
     }
 
-    private void updateWeather(String temperature, String city, String wind, String humidity) {
-        temp.setText(temperature);
-        place.setText(city);
-        air.setText(wind);
-        humid.setText(humidity);
+    private void updateWeather(WeatherInfo weatherInfo) {
+        temp.setText(weatherInfo.getTemperature());
+        place.setText(weatherInfo.getCity());
+        air.setText(weatherInfo.getWind());
+        humid.setText(weatherInfo.getHumidity());
     }
 
-    void findWeather(Location location) {
-        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&appid=b3e236d068148443f565e441eacf0a84&units=metric";
-        parseJsonAndUpdateWeather(url);
-    }
+    private static final class WeatherInfo {
+        private final String temperature;
+        private final String city;
+        private final String wind;
+        private final String humidity;
 
-    void findWeather(String city) {
-        String url = "https://www.vikramrao.in/api/weather.php?q=" + city.toLowerCase();
-        parseJsonAndUpdateWeather(url);
+        private WeatherInfo(String temperature, String city, String wind, String humidity) {
+            this.temperature = temperature;
+            this.city = city;
+            this.wind = wind;
+            this.humidity = humidity;
+        }
+
+        public String getTemperature() {
+            return temperature;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getWind() {
+            return wind;
+        }
+
+        public String getHumidity() {
+            return humidity;
+        }
     }
 }

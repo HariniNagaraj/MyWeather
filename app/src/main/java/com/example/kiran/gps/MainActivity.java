@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -28,7 +27,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate {
 
     private static final int RC_SIGN_IN = 123;
     @BindView(R.id.pullToRefresh)
@@ -40,6 +39,44 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     private SearchManager searchManager;
     private WeatherService weatherService;
 
+    @Override
+    public void createSignInIntent() {
+        List<AuthUI.IdpConfig> googleSignin = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignin).build(), RC_SIGN_IN);
+    }
+
+    @Override
+    public void signOut() {
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
+    @Override
+    public void updateWeather(String city) {
+        weatherService.findWeather(city);
+    }
+
+    @Override
+    public void locationUpdated(Location location) {
+        updateWeather(location);
+    }
+
+    @Override
+    public void cityChangedFromSearchBar(String city) {
+        updateWeather(city);
+    }
+
+    @Override
+    public void addCityToDrawer(String city) {
+        drawerManager.addCity(city);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +86,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         setupCurrentDate();
         initScreenRefresh();
         objectReferences();
-    }
-
-    public void createSignInIntent() {
-        List<AuthUI.IdpConfig> googleSignin = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignin).build(), RC_SIGN_IN);
     }
 
     @Override
@@ -77,18 +109,33 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         }
     }
 
-    private void objectReferences() {
-        weatherService = new WeatherService(this, this);
-        locationService = new LocationService(this, this);
-        searchManager = new SearchManager(this, this);
-        drawerManager = new DrawerManager(this, this);
+    @Override
+    public void onBackPressed() {
+        if (searchManager.isExpanded()) {
+            searchManager.minimize();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setupLocationServices();
-        drawerManager.showDrawerItems(this,"Login");
+        drawerManager.showDrawerItems("Login");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        locationService.onRequestPermissionsResult(requestCode, grantResults);
+    }
+
+    private void objectReferences() {
+        weatherService = new WeatherService(this, this);
+        locationService = new LocationService(this, this);
+        searchManager = new SearchManager(this, this);
+        drawerManager = new DrawerManager(this, this);
     }
 
     private void setupCurrentDate() {
@@ -104,15 +151,6 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 locationService.fetchLocation();
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (searchManager.isExpanded()) {
-            searchManager.minimize();
-            return;
-        }
-        super.onBackPressed();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -132,43 +170,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         pullToRefresh.setRefreshing(false);
     }
 
-    public  void signOut(){
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationService.onRequestPermissionsResult(requestCode, grantResults);
-    }
-
-    void updateWeather(String city) {
-        weatherService.findWeather(city);
-    }
-
     private void updateWeather(Location location) {
         weatherService.findWeather(location);
-    }
-
-    @Override
-    public void locationUpdated(Location location) {
-        updateWeather(location);
-    }
-
-    @Override
-    public void cityChangedFromSearchBar(String city) {
-        updateWeather(city);
-    }
-
-    @Override
-    public void addCityToDrawer(String city) {
-        drawerManager.addCity(city);
     }
 }

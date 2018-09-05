@@ -2,6 +2,7 @@ package com.example.kiran.gps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,32 +23,16 @@ import java.util.Objects;
 
 class LocationService implements LocationListener {
 
-    public static final int MIN_TIME = 1000;
+    private static final int MIN_TIME = 1000;
     public Location location;
-    private final MainActivity mainActivity;
+    private final Activity activity;
     private final LocationServiceDelegate delegate;
     private final LocationManager locationManager;
 
-    LocationService(MainActivity mainActivity, LocationServiceDelegate delegate) {
-        this.mainActivity = mainActivity;
+    LocationService(Activity activity, LocationServiceDelegate delegate) {
+        this.activity = activity;
         this.delegate = delegate;
-        locationManager = (LocationManager) mainActivity.getSystemService(MainActivity.LOCATION_SERVICE);
-    }
-
-    @SuppressLint("MissingPermission")
-    void fetchLocation() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
-    }
-
-    boolean requestReadLocationPermissionIfRequired() {
-        boolean locationPermissionGranted = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (!locationPermissionGranted) {
-            ActivityCompat.requestPermissions(mainActivity,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MainActivity.CONTEXT_INCLUDE_CODE);
-            return false;
-        }
-        return true;
+        locationManager = (LocationManager) activity.getSystemService(MainActivity.LOCATION_SERVICE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -58,52 +43,14 @@ class LocationService implements LocationListener {
                 status = "granted";
                 if (showGpsSettingDialogIfRequired()) fetchLocation();
             }
-            Toast.makeText(mainActivity, "Permission " + status, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Permission " + status, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    boolean showGpsSettingDialogIfRequired() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (!isGpsEnabled()) {
-                showGpsSettingsDialog();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void showGpsSettingsDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mainActivity);
-        alertDialog.setTitle("Location Settings");
-        alertDialog.setMessage("Permission Granted, Please Enable GPS in Settings.");
-        initGpsSettingsDialogActions(alertDialog);
-        alertDialog.show();
-    }
-
-    private void initGpsSettingsDialogActions(AlertDialog.Builder alertDialog) {
-        alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                mainActivity.setIntent(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                mainActivity.startActivity(mainActivity.getIntent());
-            }
-        });
-        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private boolean isGpsEnabled() {
-        final LocationManager manager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
-        return Objects.requireNonNull(manager).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onLocationChanged(final Location location) {
         this.location = location;
-        mainActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 delegate.locationUpdated(location);
@@ -125,6 +72,67 @@ class LocationService implements LocationListener {
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @SuppressLint("MissingPermission")
+    void fetchLocation() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+    }
+
+    boolean requestReadLocationPermissionIfRequired() {
+        boolean locationPermissionGranted = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (!locationPermissionGranted) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MainActivity.CONTEXT_INCLUDE_CODE);
+            return false;
+        }
+        return true;
+    }
+
+    boolean showGpsSettingDialogIfRequired() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!isGpsEnabled()) {
+                showGpsSettingsDialog();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showGpsSettingsDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+        alertDialog.setTitle("Location Settings");
+        alertDialog.setMessage("Permission Granted, Please Enable GPS in Settings.");
+        initGpsSettingsDialogActions(alertDialog);
+        alertDialog.show();
+    }
+
+    private void initGpsSettingsDialogActions(AlertDialog.Builder alertDialog) {
+        initGpsSettingsDialogSettingsClicked(alertDialog);
+        initGpsSettingsDialogCancelClicked(alertDialog);
+    }
+
+    private void initGpsSettingsDialogCancelClicked(AlertDialog.Builder alertDialog) {
+        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+    }
+
+    private void initGpsSettingsDialogSettingsClicked(AlertDialog.Builder alertDialog) {
+        alertDialog.setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private boolean isGpsEnabled() {
+        final LocationManager manager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        return Objects.requireNonNull(manager).isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     interface LocationServiceDelegate {

@@ -66,6 +66,14 @@ class SearchBarAdapter extends BaseAdapter implements Filterable {
         return valueFilter;
     }
 
+    private void searchBarFilterIteration(CharSequence constraint, List<String> filterList) {
+        for (int i = 0; i < mStringFilterList.size(); i++) {
+            if ((mStringFilterList.get(i).toUpperCase()).contains(constraint.toString().toUpperCase())) {
+                filterList.add(mStringFilterList.get(i));
+            }
+        }
+    }
+
     private class ValueFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -87,14 +95,6 @@ class SearchBarAdapter extends BaseAdapter implements Filterable {
                                       FilterResults results) {
             filteredData = (List<String>) results.values;
             notifyDataSetChanged();
-        }
-    }
-
-    private void searchBarFilterIteration(CharSequence constraint, List<String> filterList) {
-        for (int i = 0; i < mStringFilterList.size(); i++) {
-            if ((mStringFilterList.get(i).toUpperCase()).contains(constraint.toString().toUpperCase())) {
-                filterList.add(mStringFilterList.get(i));
-            }
         }
     }
 }

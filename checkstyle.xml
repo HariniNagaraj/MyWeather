@@ -36,7 +36,9 @@
         <module name="ThrowsCount">
             <property name="ignorePrivateMethods" value="false" />
         </module>
-        <module name="VisibilityModifier" />
+        <module name="VisibilityModifier">
+            <property name="ignoreAnnotationCanonicalNames" value="BindView" />
+        </module>
         <module name="ArrayTrailingComma" />
         <module name="DeclarationOrder" />
         <module name="DefaultComesLast" />
