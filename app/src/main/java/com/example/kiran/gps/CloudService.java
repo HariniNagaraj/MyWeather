@@ -7,12 +7,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CloudService {
 
     public CloudService() {
-        uploadCitiesListTOCloud();
+        uploadCitiesListToCloud();
     }
 
-    private void uploadCitiesListTOCloud() {
+    private void uploadCitiesListToCloud() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference citiesList = database.getReference("citiesList");
-        citiesList.setValue("Hello, World!");
+        citiesList.setValue("Bellary,Manglore");
     }
 }
