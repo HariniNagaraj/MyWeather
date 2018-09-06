@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     private LocationService locationService;
     private SearchManager searchManager;
     private WeatherService weatherService;
+    private CloudService cloudService;
 
     @Override
     public void createSignInIntent() {
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
         drawerManager = new DrawerManager(this, this);
+        cloudService = new CloudService();
     }
 
     private void setupCurrentDate() {
