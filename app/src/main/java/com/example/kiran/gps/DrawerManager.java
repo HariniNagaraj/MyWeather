@@ -21,9 +21,9 @@ import butterknife.ButterKnife;
 
 class DrawerManager {
 
+    public static final String LOGOUT = "Logout";
     private static final String LOGIN = "Login";
     private static final String FILENAME = "cities";
-    public static final String LOGOUT = "Logout";
     @BindView(R.id.navList)
     ListView mDrawerList;
     private final Context activity;
