@@ -31,7 +31,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate, DrawerManager.CloudServiceDelegate {
 
     private static final int RC_SIGN_IN = 123;
     @BindView(R.id.pullToRefresh)
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         weatherService = new WeatherService(this, this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
-        drawerManager = new DrawerManager(this, this);
+        drawerManager = new DrawerManager(this, this, this);
         cloudService = new CloudService();
     }
 
@@ -189,5 +189,10 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         } else {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+
+    @Override
+    public void uploadCitiesListToCloud(List<String> cities) {
+        cloudService.uploadCitiesListToCloud(cities);
     }
 }

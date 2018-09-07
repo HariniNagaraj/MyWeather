@@ -26,14 +26,17 @@ class DrawerManager {
     private static final String FILENAME = "cities";
     @BindView(R.id.navList)
     ListView mDrawerList;
+    List<String> cities = new ArrayList<>();
+    CloudServiceDelegate cloudServiceDelegate;
     private final Context activity;
-    private List<String> cities = new ArrayList<>();
     private DrawerManagerDelegate delegate;
     private ArrayAdapter<String> drawerAdapter;
 
-    public DrawerManager(Activity activity, DrawerManagerDelegate delegate) {
+    public DrawerManager(Activity activity, DrawerManagerDelegate delegate, CloudServiceDelegate cloud) {
+
         this.activity = activity;
         this.delegate = delegate;
+        this.cloudServiceDelegate = cloud;
         ButterKnife.bind(this, activity);
     }
 
@@ -69,6 +72,7 @@ class DrawerManager {
         String citiesJson = sharedPreferences.getString(FILENAME, "[]");
         this.cities = new Gson().fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
         }.getType());
+        cloudServiceDelegate.uploadCitiesListToCloud(this.cities);
         updateLoginStatusMenu(LOGIN);
     }
 
@@ -82,7 +86,7 @@ class DrawerManager {
     }
 
     private void updateLoginStatusMenu(String loginStatusText) {
-        cities.set(0, loginStatusText);
+        cities.add(0, loginStatusText);
     }
 
     private void onMenuItemClicked(String clickedOption) {
@@ -100,5 +104,9 @@ class DrawerManager {
         void signOut();
 
         void updateWeather(String city);
+    }
+
+    interface CloudServiceDelegate {
+        void uploadCitiesListToCloud(List<String> cities);
     }
 }

@@ -4,15 +4,13 @@ package com.example.kiran.gps;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
+
 public class CloudService {
 
-    public CloudService() {
-        uploadCitiesListToCloud();
-    }
 
-    private void uploadCitiesListToCloud() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference citiesList = database.getReference("citiesList");
-        citiesList.setValue("Bellary,Manglore");
+    void uploadCitiesListToCloud(List<String> cities) {
+        DatabaseReference citiesList = FirebaseDatabase.getInstance().getReference("citiesList");
+        citiesList.setValue(cities);
     }
 }
