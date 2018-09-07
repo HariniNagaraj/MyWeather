@@ -40,7 +40,6 @@ public class SearchManager {
 
     private void setupSearchBarIcon() {
         citiesSearchView.setIconifiedByDefault(true);
-        citiesSearchView.setMaxWidth(Integer.MAX_VALUE);
         citiesSearchView.setFocusable(false);
         citiesSearchView.setFocusableInTouchMode(true);
         citiesSearchView.setQueryHint("Search City");

@@ -6,8 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     SwipeRefreshLayout pullToRefresh;
     @BindView(R.id.day)
     TextView date;
+    @BindView(R.id.drawerid)
+    DrawerLayout drawerLayout;
     private DrawerManager drawerManager;
     private LocationService locationService;
     private SearchManager searchManager;
@@ -176,5 +181,13 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
     private void updateWeather(Location location) {
         weatherService.findWeather(location);
+    }
+
+    public void showDrawerMenu(View view) {
+        if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        } else {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 }
