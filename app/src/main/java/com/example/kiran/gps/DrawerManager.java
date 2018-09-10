@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,7 +24,7 @@ import butterknife.ButterKnife;
 class DrawerManager {
 
     public static final String LOGOUT = "Logout";
-    private static final String LOGIN = "Login";
+    public static final String LOGIN = "Login";
     private static final String FILENAME = "cities";
     @BindView(R.id.navList)
     ListView mDrawerList;
@@ -70,9 +72,9 @@ class DrawerManager {
     private void loadMenus() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(FILENAME, Context.MODE_PRIVATE);
         String citiesJson = sharedPreferences.getString(FILENAME, "[]");
-        this.cities = new Gson().fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
+        cities = new Gson().fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
         }.getType());
-        cloudServiceDelegate.uploadCitiesListToCloud(this.cities);
+        cloudServiceDelegate.uploadCitiesListToCloud(cities);
         updateLoginStatusMenu(LOGIN);
     }
 
@@ -86,8 +88,10 @@ class DrawerManager {
     }
 
     private void updateLoginStatusMenu(String loginStatusText) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (cities.size() == 0) cities.add(loginStatusText);
-        else cities.set(0, loginStatusText);
+        else if (user == null) cities.set(0, LOGIN);
+        else cities.set(0, LOGOUT);
     }
 
     private void onMenuItemClicked(String clickedOption) {
@@ -95,7 +99,6 @@ class DrawerManager {
             delegate.createSignInIntent();
         } else if (clickedOption.equals(LOGOUT)) {
             delegate.signOut();
-            updateMenus(LOGIN);
         } else delegate.updateWeather(clickedOption);
     }
 

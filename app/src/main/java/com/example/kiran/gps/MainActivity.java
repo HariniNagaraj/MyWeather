@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(MainActivity.this, "You have been signed out!", Toast.LENGTH_SHORT).show();
+                        drawerManager.updateMenus(DrawerManager.LOGIN);
                     }
                 });
     }
