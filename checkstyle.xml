@@ -21,6 +21,11 @@
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected" />
         </module>
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true" />
+            <property name="allowMultipleEmptyLines" value="false" />
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false" />
+        </module>
         <module name="LeftCurly" />
         <module name="NeedBraces">
             <property name="allowSingleLineStatement" value="true" />
