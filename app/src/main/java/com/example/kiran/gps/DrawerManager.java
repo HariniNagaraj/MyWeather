@@ -86,7 +86,8 @@ class DrawerManager {
     }
 
     private void updateLoginStatusMenu(String loginStatusText) {
-        cities.add(0, loginStatusText);
+        if (cities.size() == 0) cities.add(loginStatusText);
+        else cities.set(0, loginStatusText);
     }
 
     private void onMenuItemClicked(String clickedOption) {
