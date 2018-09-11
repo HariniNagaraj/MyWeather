@@ -26,12 +26,12 @@ class DrawerManager {
     public static final String LOGOUT = "Logout";
     public static final String LOGIN = "Login";
     private static final String FILENAME = "cities";
+    public ArrayAdapter<String> drawerAdapter;
     @BindView(R.id.navList)
     ListView mDrawerList;
     List<String> cities = new ArrayList<>();
     private final Context activity;
-    private DrawerManagerDelegate delegate;
-    public ArrayAdapter<String> drawerAdapter;
+    private final DrawerManagerDelegate delegate;
 
     public DrawerManager(Activity activity, DrawerManagerDelegate delegate) {
 

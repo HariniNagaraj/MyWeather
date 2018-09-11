@@ -16,9 +16,8 @@ import java.util.List;
 
 public class CloudService implements ValueEventListener {
 
-
+    private final CloudServiceDelegate delegate;
     private DatabaseReference citiesList;
-    private CloudServiceDelegate delegate;
 
     public CloudService(CloudServiceDelegate delegate) {
         this.delegate = delegate;
@@ -26,6 +25,7 @@ public class CloudService implements ValueEventListener {
 
     void sync() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         citiesList = FirebaseDatabase.getInstance().getReference("Cities/" + user.getUid());
         citiesList.addValueEventListener(this);
     }
@@ -45,7 +45,6 @@ public class CloudService implements ValueEventListener {
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-
     }
 
     interface CloudServiceDelegate {
