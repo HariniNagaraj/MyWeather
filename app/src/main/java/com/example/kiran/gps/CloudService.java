@@ -31,7 +31,9 @@ public class CloudService implements ValueEventListener {
     }
 
     void uploadCitiesListToCloud(final List<String> cities) {
-        citiesList.setValue(cities);
+        if (citiesList != null) {
+            citiesList.setValue(cities);
+        }
     }
 
     @Override
