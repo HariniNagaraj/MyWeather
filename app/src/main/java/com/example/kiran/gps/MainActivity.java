@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate, DrawerManager.CloudServiceDelegate {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate, CloudService.CloudServiceDelegate {
 
     private static final int RC_SIGN_IN = 123;
     @BindView(R.id.pullToRefresh)
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public void createSignInIntent() {
         List<AuthUI.IdpConfig> googleSignIn = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignIn).build(), RC_SIGN_IN);
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignIn).setIsSmartLockEnabled(false).build(), RC_SIGN_IN);
     }
 
     @Override
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        drawerManager.clear();
                         Toast.makeText(MainActivity.this, "You have been signed out!", Toast.LENGTH_SHORT).show();
                         drawerManager.updateMenus(DrawerManager.LOGIN);
                     }
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public void addCityToDrawer(String city) {
         drawerManager.addCity(city);
+        cloudService.uploadCitiesListToCloud(drawerManager.cities);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(MainActivity.this, "welcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 drawerManager.updateMenus(DrawerManager.LOGOUT);
+                cloudService.sync();
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -144,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         weatherService = new WeatherService(this, this);
         locationService = new LocationService(this, this);
         searchManager = new SearchManager(this, this);
-        drawerManager = new DrawerManager(this, this, this);
-        cloudService = new CloudService();
+        drawerManager = new DrawerManager(this, this);
+        cloudService = new CloudService(this);
     }
 
     private void setupCurrentDate() {
@@ -193,7 +197,10 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     @Override
-    public void uploadCitiesListToCloud(List<String> cities) {
-        cloudService.uploadCitiesListToCloud(cities);
+    public void citiesDownloaded(List<String> citiesList) {
+        if (citiesList == null) citiesList = new ArrayList<>();
+        for (String city : citiesList)
+            drawerManager.addCity(city);
+        cloudService.uploadCitiesListToCloud(drawerManager.cities);
     }
 }
