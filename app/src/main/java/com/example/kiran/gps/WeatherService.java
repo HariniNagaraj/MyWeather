@@ -18,8 +18,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -73,7 +71,7 @@ class WeatherService {
     private void errorResponse(VolleyError error) {
         NetworkResponse networkResponse = error.networkResponse;
         if (networkResponse != null && networkResponse.data != null) {
-            String jsonError = Arrays.toString(networkResponse.data);
+            String jsonError = networkResponse.data.toString();
             Toast.makeText(context, jsonError,
                     Toast.LENGTH_LONG).show();
         }
