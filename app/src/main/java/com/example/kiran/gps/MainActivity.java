@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,6 +34,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LocationService.LocationServiceDelegate, SearchManager.SearchManagerDelegate, DrawerManager.DrawerManagerDelegate, CloudService.CloudServiceDelegate {
 
+    public static final String USER_REFRESH = "userRefresh";
     private static final int RC_SIGN_IN = 123;
     @BindView(R.id.pullToRefresh)
     SwipeRefreshLayout pullToRefresh;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     private SearchManager searchManager;
     private WeatherService weatherService;
     private CloudService cloudService;
+    private FirebaseAnalytics firebaseAnalytics;
+    private Bundle bundle;
 
     @Override
     public void createSignInIntent() {
@@ -124,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 Toast.makeText(MainActivity.this, "welcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 drawerManager.updateMenus(DrawerManager.LOGOUT);
                 cloudService.sync();
+                bundle.putString(FirebaseAnalytics.Event.LOGIN, user.getDisplayName());
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
             } else {
                 Toast.makeText(MainActivity.this, "sign-in failed, try again!", Toast.LENGTH_SHORT).show();
             }
@@ -157,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         searchManager = new SearchManager(this, this);
         drawerManager = new DrawerManager(this, this);
         cloudService = new CloudService(this);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        bundle = new Bundle();
     }
 
     private void setupCurrentDate() {
@@ -189,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         locationService.fetchLocation();
         updateWeather(locationService.location);
         pullToRefresh.setRefreshing(false);
+        firebaseAnalytics.logEvent(USER_REFRESH, bundle);
     }
 
     private void updateWeather(Location location) {
