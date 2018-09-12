@@ -76,7 +76,8 @@ class LocationService implements LocationListener {
 
     @SuppressLint("MissingPermission")
     void fetchLocation() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
+        if (requestReadLocationPermissionIfRequired())
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, 0, this);
     }
 
     boolean requestReadLocationPermissionIfRequired() {

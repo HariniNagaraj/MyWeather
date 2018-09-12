@@ -25,6 +25,7 @@ class DrawerManager {
 
     public static final String LOGOUT = "Logout";
     public static final String LOGIN = "Login";
+    public static final String CLEAR = "Clear MyList";
     private static final String FILENAME = "cities";
     public ArrayAdapter<String> drawerAdapter;
     @BindView(R.id.navList)
@@ -73,6 +74,7 @@ class DrawerManager {
         String citiesJson = sharedPreferences.getString(FILENAME, "[]");
         cities = new Gson().fromJson(citiesJson, new TypeToken<ArrayList<String>>() {
         }.getType());
+        if (cities.contains(CLEAR)) cities.remove(CLEAR);
         updateLoginStatusMenu(LOGIN);
     }
 
@@ -89,7 +91,10 @@ class DrawerManager {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (cities.size() == 0) cities.add(loginStatusText);
         else if (user == null) cities.set(0, LOGIN);
-        else cities.set(0, LOGOUT);
+        else {
+            cities.set(0, LOGOUT);
+            cities.add(CLEAR);
+        }
     }
 
     private void onMenuItemClicked(String clickedOption) {
@@ -97,6 +102,8 @@ class DrawerManager {
             delegate.createSignInIntent();
         } else if (clickedOption.equals(LOGOUT)) {
             delegate.signOut();
+        } else if (clickedOption.equals(CLEAR)) {
+            delegate.clearUserData();
         } else delegate.updateWeather(clickedOption);
     }
 
@@ -111,5 +118,7 @@ class DrawerManager {
         void signOut();
 
         void updateWeather(String city);
+
+        void clearUserData();
     }
 }

@@ -1,7 +1,6 @@
 package com.example.kiran.gps;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,7 +14,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 public class CloudService implements ValueEventListener {
-
 
     private final CloudServiceDelegate delegate;
     private DatabaseReference citiesList;
@@ -41,7 +39,6 @@ public class CloudService implements ValueEventListener {
         GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {
         };
         List<String> cloudCitiesList = dataSnapshot.getValue(genericTypeIndicator);
-        Log.d("test", "Value is: " + cloudCitiesList);
         delegate.citiesDownloaded(cloudCitiesList);
     }
 

@@ -72,6 +72,20 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     @Override
+    public void clearUserData() {
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        drawerManager.clear();
+                        drawerManager.updateMenus(DrawerManager.LOGOUT);
+                        Toast.makeText(MainActivity.this, "Data has been cleared.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
     public void locationUpdated(Location location) {
         updateWeather(location);
     }
@@ -94,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initServices();
+        setupLocationServices();
         setupCurrentDate();
         initScreenRefresh();
         drawerManager.initDrawerMenu();
@@ -127,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     protected void onResume() {
         super.onResume();
-        setupLocationServices();
+        locationService.fetchLocation();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

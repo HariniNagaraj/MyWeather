@@ -41,7 +41,8 @@ class WeatherService {
     }
 
     void findWeather(Location location) {
-        parseJsonAndUpdateWeather("https://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&appid=b3e236d068148443f565e441eacf0a84&units=metric");
+        if (location != null)
+            parseJsonAndUpdateWeather("https://api.openweathermap.org/data/2.5/weather?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&appid=b3e236d068148443f565e441eacf0a84&units=metric");
     }
 
     void findWeather(String city) {
