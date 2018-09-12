@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,8 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
     @Override
     public void createSignInIntent() {
-        List<AuthUI.IdpConfig> googleSignIn = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
+        List<AuthUI.IdpConfig> googleSignIn = Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build());
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(googleSignIn).setIsSmartLockEnabled(false).build(), RC_SIGN_IN);
     }
 
@@ -94,9 +93,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initServices();
         setupCurrentDate();
         initScreenRefresh();
-        initServices();
         drawerManager.initDrawerMenu();
     }
 
@@ -105,20 +104,13 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(MainActivity.this, "welcome " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 drawerManager.updateMenus(DrawerManager.LOGOUT);
                 cloudService.sync();
-                // ...
             } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
+                Toast.makeText(MainActivity.this, "sign-in failed, try again!", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -17,8 +17,8 @@ import java.util.List;
 public class CloudService implements ValueEventListener {
 
 
+    private final CloudServiceDelegate delegate;
     private DatabaseReference citiesList;
-    private CloudServiceDelegate delegate;
 
     public CloudService(CloudServiceDelegate delegate) {
         this.delegate = delegate;
