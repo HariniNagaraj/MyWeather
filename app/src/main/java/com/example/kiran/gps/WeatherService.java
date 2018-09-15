@@ -94,6 +94,7 @@ class WeatherService {
         String wind = String.valueOf(mainObjectWind.getInt("speed") * WIND_SPEED + " kph");
         String humidity = String.valueOf(mainObject.getInt("humidity") + "%");
         updateWeather(new WeatherInfo(temperature, city, wind, humidity));
+
     }
 
     private void updateWeather(WeatherInfo weatherInfo) {

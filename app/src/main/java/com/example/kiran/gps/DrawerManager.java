@@ -35,7 +35,6 @@ class DrawerManager {
     private final DrawerManagerDelegate delegate;
 
     public DrawerManager(Activity activity, DrawerManagerDelegate delegate) {
-
         this.activity = activity;
         this.delegate = delegate;
         ButterKnife.bind(this, activity);
