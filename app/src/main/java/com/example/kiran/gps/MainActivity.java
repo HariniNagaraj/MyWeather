@@ -213,5 +213,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         for (String city : citiesList)
             drawerManager.addCity(city);
         cloudService.uploadCitiesListToCloud(drawerManager.cities);
+        citiesList.remove("Logout");
+        citiesList.remove("Clear MyList");
+        analyticsService.uploadUserCitiesForAnalytics(citiesList);
     }
 }

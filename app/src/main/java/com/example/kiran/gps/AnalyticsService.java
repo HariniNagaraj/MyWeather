@@ -6,8 +6,11 @@ import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 public class AnalyticsService {
 
+    public static final String USER_CITIES_LIST = "userCitiesList";
     private static final String USER_REFRESH = "userRefresh";
     private final FirebaseAnalytics firebaseAnalytics;
     private final Bundle bundle;
@@ -24,5 +27,16 @@ public class AnalyticsService {
 
     public void onUserRefresh() {
         firebaseAnalytics.logEvent(USER_REFRESH, bundle);
+    }
+
+    public void uploadUserCitiesForAnalytics(List<String> userCitiesList) {
+        StringBuilder userCities = new StringBuilder();
+        for (String cities : userCitiesList) {
+            userCities.append(cities).append(", ");
+        }
+        if (userCities.length() > 0)
+            userCities = new StringBuilder(userCities.substring(0, userCities.length() - 2));
+        bundle.putString(USER_CITIES_LIST, userCities.toString());
+        firebaseAnalytics.logEvent(USER_CITIES_LIST, bundle);
     }
 }
