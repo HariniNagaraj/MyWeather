@@ -36,6 +36,16 @@
                 android:padding="7dp"
                 android:src="@drawable/ic_ham" />
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="35dp"
+                android:background="@null"
+                android:onClick="onClickShare"
+                android:padding="10dp"
+                android:src="@drawable/ic_share" />
+
 
             <TextView
                 android:id="@+id/day"

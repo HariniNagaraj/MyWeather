@@ -217,4 +217,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         citiesList.remove("Clear MyList");
         analyticsService.uploadUserCitiesForAnalytics(citiesList);
     }
+
+    public void onClickShare(View view) {
+    }
 }
