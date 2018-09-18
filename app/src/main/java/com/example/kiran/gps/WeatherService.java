@@ -24,6 +24,8 @@ import butterknife.ButterKnife;
 class WeatherService {
 
     private static final double WIND_SPEED = 3.6;
+    private final Context context;
+    public WeatherInfo weatherInfo;
     @BindView(R.id.city)
     TextView place;
     @BindView(R.id.celcius)
@@ -32,8 +34,6 @@ class WeatherService {
     TextView air;
     @BindView(R.id.humidity)
     TextView humid;
-
-    private final Context context;
 
     WeatherService(Context context, Activity activity) {
         this.context = context;
@@ -102,13 +102,14 @@ class WeatherService {
         place.setText(weatherInfo.getCity());
         air.setText(weatherInfo.getWind());
         humid.setText(weatherInfo.getHumidity());
+        this.weatherInfo = weatherInfo;
     }
 
-    private static final class WeatherInfo {
-        private final String temperature;
-        private final String city;
-        private final String wind;
-        private final String humidity;
+    public final class WeatherInfo {
+        private String temperature;
+        private String city;
+        private String wind;
+        private String humidity;
 
         private WeatherInfo(String temperature, String city, String wind, String humidity) {
             this.temperature = temperature;

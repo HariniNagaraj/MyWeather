@@ -219,5 +219,12 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     }
 
     public void onClickShare(View view) {
+        if (weatherService.weatherInfo == null) return;
+        String appUrl = "https://drive.google.com/open?id=1Nz6-NMa84TF6aBflqgEin_VFBu3vbu4N";
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, weatherService.weatherInfo.getCity() + " temperature is " + weatherService.weatherInfo.getTemperature() + " \nHey check out this app at " + appUrl);
+        intent.setType("text/plain");
+        startActivity(intent);
     }
 }
